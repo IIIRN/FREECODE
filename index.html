@@ -13,10 +13,7 @@
         body {
             font-family: 'Roboto', sans-serif;
         }
-        .selected {
-            background-color: #000000;
-            color: white;
-        }
+       
         .no-scrollbar {
             -ms-overflow-style: none;  /* Internet Explorer 10+ */
             scrollbar-width: none;  /* Firefox */
@@ -136,7 +133,7 @@
                     selectDate(year, month, day);
                 }
                 dayElement.addEventListener('click', () => {
-                    document.querySelectorAll('#calendarDays > div').forEach(el => el.classList.remove('selected','text-white'));
+                    document.querySelectorAll('#calendarDays > div').forEach(el => el.classList.remove('selected','bg-gray-900','text-white'));
                     dayElement.classList.add('selected');
                     selectDate(year, month, day);
                 });
