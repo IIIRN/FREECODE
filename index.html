@@ -13,7 +13,10 @@
         body {
             font-family: 'Roboto', sans-serif;
         }
-       
+        .selected {
+            background-color: #000000;
+            color: white;
+        }
         .no-scrollbar {
             -ms-overflow-style: none;  /* Internet Explorer 10+ */
             scrollbar-width: none;  /* Firefox */
@@ -133,7 +136,7 @@
                     selectDate(year, month, day);
                 }
                 dayElement.addEventListener('click', () => {
-                    document.querySelectorAll('#calendarDays > div').forEach(el => el.classList.remove('selected','bg-gray-900','text-white'));
+                    document.querySelectorAll('#calendarDays > div').forEach(el => el.classList.remove('selected','text-white'));
                     dayElement.classList.add('selected');
                     selectDate(year, month, day);
                 });
@@ -145,7 +148,7 @@
             selectedDate = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
             try {
                 Swal.fire({
-                    title: '<div class="text-md">กำลังโหลดข้อมูล..</div>',
+                    title: '<div class="text-sm text-center font-b">กำลังโหลดข้อมูล..</div>',
                     allowOutsideClick: false,
                     didOpen: () => {
                         Swal.showLoading();
