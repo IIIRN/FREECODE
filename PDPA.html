@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDPA</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-6 rounded-xl shadow-lg max-w-sm w-full">
+        <div class="flex items-center mb-4">
+            <span class="text-xl font-bold">IIIRN Studio</span> 
+        </div>
+        <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-gray-300 rounded flex items-center justify-center">
+                <img src="" alt="Default Image" id="profilePicture" class="w-8 h-8 text-white">
+            </div>
+            <input type="text" id="userlineId" name="userlineId" placeholder="userlineId" class="ml-3 text-lg font-medium" readonly>
+        </div>
+        <div class="mb-4 max-h-40 overflow-y-auto">
+            <p class="text-sm leading-tight">
+                บริษัท ภายใต้นโยบายข้อมูลส่วนบุคคลฉบับนี้ และเมื่อท่านติดต่อกับบริษัท ส่งต่อเปิดเผยข้อมูลส่วนบุคคลของท่านให้แก่บริษัทเพื่อประโยชน์ในการติดต่อ ประสานงาน และ/หรือการให้บริการจากบริษัทให้แก่ท่าน บริษัทจะถือว่าท่านตกลงและยอมรับที่จะปฏิบัติตามนโยบายข้อมูลส่วนบุคคลฉบับนี้แล้ว ข้อมูลส่วนบุคคลที่เราจะรวบรวม บริษัทจะได้รับข้อมูลส่วนบุคคลของท่านได้จากหลายช่องทาง ดังนี้
+                (1) ได้รับโดยตรง จากการติดต่อสื่อสารระหว่างบริษัทและท่าน
+                (2) ได้รับทางอ้อมจากการอ้างอิงจากบุคคลอื่น ซึ่งท่านอาจให้ความยินยอมให้บุคคลที่สามเปิดเผยส่งต่อข้อมูลส่วนบุคคลของท่านให้บริษัท
+                (3) เก็บรวบรวมโดยอัตโนมัติด้วยระบบ เมื่อท่านเข้ามาเยี่ยมชมเว็บไซต์ และ/หรือใช้บริการต่าง ๆ ของบริษัท
+            </p>
+        </div>
+        <div class="mb-4">
+            <label class="inline-flex items-center">
+                <input type="checkbox" class="form-checkbox text-blue-600" id="termsAccept">
+                <span class="ml-2">ยอมรับข้อตกลงการใช้งาน</span>
+            </label>
+        </div>
+        <div class="mb-4">
+            <label class="inline-flex items-center">
+                <input type="checkbox" class="form-checkbox text-blue-600" id="pdpaAccept">
+                <span class="ml-2">ยอมรับข้อตกลงการใช้งาน PDPA</span>
+            </label>
+        </div>
+        <button id="startButton" class="bg-gray-800 text-white py-2 px-4 rounded-lg w-full">เริ่มใช้งาน</button>
+    </div>
+    <script>
+        window.onload = function () {
+            initializeLiff(), getUserProfile();
+        };
+        async function initializeLiff() {
+            await liff.init({ liffId: '' });
+
+            if (liff.isLoggedIn()) {
+                getUserProfile();
+            } else {
+                liff.login();
+            }
+        }
+        async function getUserProfile() {
+            try {
+                const profile = await liff.getProfile();
+                document.getElementById('userlineId').value = profile.userId;
+                document.getElementById('displayName').value = profile.displayName;
+                document.getElementById('profilePicture').src = profile.pictureUrl;
+            } catch (error) {
+                console.error('Error getting profile data:', error);
+            }
+        }
+    </script>
+</body>
+</html>
