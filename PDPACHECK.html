@@ -47,60 +47,62 @@
     </div>
 
     <script>
-        async function checkAcceptance(userId) {
-            const response = await fetch(`https://script.google.com/macros/s/AKfycbzB1dXiSuGv2dNF8OHjoujVue8pfK2uQ3qXGJEBB4Ko9P0ufUKaYwqTdiR6vcbFKqny3A/exec?userId=${userId}`);
-            const data = await response.json();
-            return data.accepted;
-        }
-
         document.addEventListener("DOMContentLoaded", async function() {
-            await liff.init({ liffId: "2005629952-gbbqOpay" });
-            if (liff.isLoggedIn()) {
-                const profile = await liff.getProfile();
-                document.getElementById('userlineId').value = profile.userId;
-                document.getElementById('displayName').innerText = profile.displayName;
-                document.getElementById('displayNameInput').value = profile.displayName;
-                document.getElementById('profilePicture').src = profile.pictureUrl;
+    await liff.init({ liffId: "2005629952-gbbqOpay" });
+    
+    if (liff.isLoggedIn()) {
+        const profile = await liff.getProfile();
+        document.getElementById('userlineId').value = profile.userId;
+        document.getElementById('displayName').innerText = profile.displayName;
+        document.getElementById('displayNameInput').value = profile.displayName;
+        document.getElementById('profilePicture').src = profile.pictureUrl;
 
-                const accepted = await checkAcceptance(profile.userId);
-                if (accepted) {
-                    window.location.href = "https://www.google.com";
-                }
-            } else {
-                liff.login();
+        const accepted = await checkAcceptance(profile.userId);
+        if (accepted) {
+            window.location.href = "https://www.google.com";
+        }
+    } else {
+        liff.login();
+    }
+});
+
+document.getElementById('startButton').addEventListener('click', function() {
+    const termsAccepted = document.getElementById('termsAccept').checked;
+    const pdpaAccepted = document.getElementById('pdpaAccept').checked;
+
+    if (termsAccepted && pdpaAccepted) {
+        const data = {
+            userId: document.getElementById('userlineId').value,
+            displayName: document.getElementById('displayNameInput').value,
+            termsAccepted: termsAccepted,
+            pdpaAccepted: pdpaAccepted
+        };
+
+        fetch('https://script.google.com/macros/s/AKfycbzB1dXiSuGv2dNF8OHjoujVue8pfK2uQ3qXGJEBB4Ko9P0ufUKaYwqTdiR6vcbFKqny3A/exec', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(response => response.json())
+        .then(data => {
+            if (data.result === "success" || data.result === "exists") {
+                window.location.href = "https://www.google.com";
             }
+        }).catch((error) => {
+            console.error('Error:', error);
         });
+    } else {
+        alert('Please accept the terms and conditions to proceed.');
+    }
+});
 
-        document.getElementById('startButton').addEventListener('click', function() {
-            const termsAccepted = document.getElementById('termsAccept').checked;
-            const pdpaAccepted = document.getElementById('pdpaAccept').checked;
+async function checkAcceptance(userId) {
+    const response = await fetch(`https://script.google.com/macros/s/AKfycbzB1dXiSuGv2dNF8OHjoujVue8pfK2uQ3qXGJEBB4Ko9P0ufUKaYwqTdiR6vcbFKqny3A/exec?userId=${userId}`);
+    const data = await response.json();
+    return data.accepted;
+}
 
-            if (termsAccepted && pdpaAccepted) {
-                const data = {
-                    userId: document.getElementById('userlineId').value,
-                    displayName: document.getElementById('displayNameInput').value,
-                    termsAccepted: termsAccepted,
-                    pdpaAccepted: pdpaAccepted
-                };
-
-                fetch('https://script.google.com/macros/s/AKfycbzB1dXiSuGv2dNF8OHjoujVue8pfK2uQ3qXGJEBB4Ko9P0ufUKaYwqTdiR6vcbFKqny3A/exec', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                }).then(response => response.json())
-                .then(data => {
-                    if (data.result === "success" || data.result === "exists") {
-                        window.location.href = "https://www.google.com";
-                    }
-                }).catch((error) => {
-                    console.error('Error:', error);
-                });
-            } else {
-                alert('Please accept the terms and conditions to proceed.');
-            }
-        });
     </script>
 </body>
 </html>
