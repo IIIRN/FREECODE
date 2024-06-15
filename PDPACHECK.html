@@ -10,6 +10,7 @@
             background-color: #f3f4f6;
         }
     </style>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script> <!-- Add LIFF SDK -->
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
     <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
@@ -22,7 +23,7 @@
             <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
                 <img id="profilePicture" class="w-12 h-12 rounded-full" src="default_image.png" alt="Profile Picture">
             </div>
-            <span class="ml-3 text-lg font-medium" id="displayName">MICHAEL</span>
+            <span class="ml-3 text-lg font-medium" id="displayName">กำลังโหลด...</span>
         </div>
 
         <div class="mb-4 max-h-40 overflow-y-auto">
@@ -51,11 +52,37 @@
         <button id="startButton" class="bg-blue-600 text-white py-2 px-4 rounded-lg w-full">เริ่มใช้งาน</button>
 
         <!-- Hidden input fields to store user data -->
-        <input type="hidden" id="userlineId" value="user_12345">
-        <input type="hidden" id="displayNameInput" value="MICHAEL">
+        <input type="hidden" id="userlineId">
+        <input type="hidden" id="displayNameInput">
     </div>
 
     <script>
+        window.onload = function () {
+            initializeLiff();
+        };
+
+        async function initializeLiff() {
+            await liff.init({ liffId: '2005629952-1e7WxQKl' }); // Replace with your LIFF ID
+
+            if (liff.isLoggedIn()) {
+                getUserProfile();
+            } else {
+                liff.login();
+            }
+        }
+
+        async function getUserProfile() {
+            try {
+                const profile = await liff.getProfile();
+                document.getElementById('displayName').textContent = profile.displayName;
+                document.getElementById('profilePicture').src = profile.pictureUrl || "default_image.png";
+                document.getElementById('userlineId').value = profile.userId;
+                document.getElementById('displayNameInput').value = profile.displayName;
+            } catch (error) {
+                console.error('Error getting profile data:', error);
+            }
+        }
+
         document.getElementById('startButton').addEventListener('click', function () {
             const termsAccept = document.getElementById('termsAccept').checked;
             const pdpaAccept = document.getElementById('pdpaAccept').checked;
@@ -68,7 +95,7 @@
                     pdpaAccept: pdpaAccept
                 };
 
-                fetch('https://script.google.com/macros/s/AKfycbyvNVVwM9VRCpY6STGHvtiHfLO3Ckl-IQiO6KXsjERJ53IwcushHzVpJ7XBDPokbVylaQ/exec', { // Replace 'YOUR_GAS_WEB_APP_URL' with the actual URL
+                fetch('https://script.google.com/macros/s/AKfycbwQrGx8v7v8V231ttjorbWUTTe2ByxAPRgGyxBDsnuSGFYJAOW4H5CbdDtw6lbJ1OXCeg/exec', { // Replace 'YOUR_GAS_WEB_APP_URL' with the actual URL
                     method: 'POST',
                     body: JSON.stringify(data),
                     headers: {
