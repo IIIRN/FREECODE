@@ -10,9 +10,11 @@
       var userId = document.getElementById('userId').value;
       var apiUrl = 'https://script.google.com/macros/s/AKfycbzZ8x4snul8yVOSM11UNcvtLCVjqoI96LJ5dH_CJ7s4hdBvBGz5HjT2pEboX0Yx5DaJ/exec'; // Replace with your Google Apps Script API URL
 
+
       try {
         let response = await fetch(apiUrl + '?userId=' + encodeURIComponent(userId));
         let data = await response.json();
+
 
         var result = document.getElementById('result');
         if (data.found) {
@@ -30,9 +32,11 @@
         console.error('Error:', error);
       }
     }
+  </script>
+  <script>
      // LINE LIFF Integration
      window.onload = function () {
-             initializeLiff();
+            initializeLiff();
         };
 
         async function initializeLiff() {
@@ -66,12 +70,12 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
   <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-                    <input type="text" id="userlineId" name="userlineId" placeholder="Enter User LINE ID" class="mt-1 p-2 border rounded-md w-full ">
-
     <h1 class="text-2xl font-bold mb-6 text-center text-blue-600">Check User ID</h1>
     <form onsubmit="event.preventDefault(); checkUserId();" class="flex flex-col space-y-4">
+        <input type="text" id="displayName" name="displayName" placeholder="Enter Display Name" class="ml-3 text-lg font-medium" >
+
       <label for="userId" class="text-lg font-medium">User ID:</label>
-      <input type="text" id="userlineId" name="userId" required class="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <input type="text" id="userId" name="userId" required class="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
       <input type="submit" value="Check" class="bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 cursor-pointer">
     </form>
     <div id="result" class="mt-6"></div>
