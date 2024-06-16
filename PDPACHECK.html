@@ -8,7 +8,7 @@
   <script>
     async function checkUserId() {
       var userId = document.getElementById('userId').value;
-      var apiUrl = 'https://script.google.com/macros/s/AKfycbwJQeH6VGYsY5qZ7WaeoJTUVYMbjIx2rKpis3EqKSnhWmyA0k3x6XFTRW_94EnhP0VK/exec'; // Replace with your Google Apps Script API URL
+      var apiUrl = 'https://script.google.com/macros/s/AKfycbxlvUGPgbi1XSR9WZZjLOJ8ADiWp8qUnsX3u78TreajBK5jOfuofeDh35FHOp3PFR0/exec'; // Replace with your Google Apps Script API URL
 
       try {
         let response = await fetch(apiUrl + '?userId=' + encodeURIComponent(userId));
