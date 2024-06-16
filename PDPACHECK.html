@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Check User หหD</title>
+  <title>Check User ID</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 
@@ -56,6 +56,9 @@
         } else {
           result.innerHTML = 'User ID not found in DATA sheet.';
           result.className = 'text-red-500 mt-4 p-4 bg-red-100 rounded-md';
+          alert('ลงทะเบียนด้วย'); // Show popup when user ID is not found
+          // Hide check user ID div
+          document.getElementById('checkUserIdDiv').style.display = 'none';
           // Show PDPA form
           document.getElementById('pdpaForm').style.display = 'block';
           document.getElementById('pdpaName').value = document.getElementById('displayName').value;
@@ -106,7 +109,7 @@
   </script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+  <div id="checkUserIdDiv" class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
     <h1 class="text-2xl font-bold mb-6 text-center text-blue-600">Check User ID</h1>
     <form onsubmit="event.preventDefault(); checkUserId();" class="flex flex-col space-y-4">
       <input type="text" id="displayName" name="displayName" placeholder="Display Name" class="ml-3 text-lg font-medium hidden">
@@ -154,7 +157,7 @@
           <span class="ml-2 text-sm">ยอมรับข้อตกลงการใช้งาน PDPA</span>
         </label>
       </div>
-      <button type="button" id="submitBtn" class="bg-gray-800 text-white py-2 px-4 rounded-lg w-full" onclick="submitPDPA();">Submit</button>
+      <button type="submit" id="submitBtn" class="bg-gray-800 text-white py-2 px-4 rounded-lg w-full">Submit</button>
     </form>
   </div>
 </body>
