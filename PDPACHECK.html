@@ -13,18 +13,17 @@
             <span class="text-xl font-bold">IIIRN Studio</span>
         </div>
         <!-- Profile Picture Display -->
-        <div class="w-12 h-12 bg-gray-300 rounded flex items-center justify-center mb-4">
-            <img src="https://via.placeholder.com/100" alt="profilePicture" id="profilePictureImg" class="w-12 h-12 text-white rounded">
+        <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-gray-300 rounded flex items-center justify-center">
+                <img src="https://via.placeholder.com/100" alt="profilePicture" id="profilePictureImg" class="w-12 h-12 text-white rounded">
+            </div>
+                <input type="text" id="displayName" name="displayName" placeholder="Enter Display Name" class="mt-1 p-2 border rounded-md w-full">
         </div>
         <!-- Form -->
         <form>
+            
             <div class="mb-4">
-                <label for="displayName" class="block text-sm font-medium text-gray-600">Display Name</label>
-                <input type="text" id="displayName" name="displayName" placeholder="Enter Display Name" class="mt-1 p-2 border rounded-md w-full">
-            </div>
-            <div class="mb-4">
-                <label for="userlineId" class="block text-sm font-medium text-gray-600">User LINE ID</label>
-                <input type="text" id="userlineId" name="userlineId" placeholder="Enter User LINE ID" class="mt-1 p-2 border rounded-md w-full">
+                <input type="text" id="userlineId" name="userlineId" placeholder="Enter User LINE ID" class="mt-1 p-2 border rounded-md w-full hidden">
             </div>
             <div class="mb-4">
                 <label class="inline-flex items-center">
@@ -38,7 +37,7 @@
                     <span class="ml-2">ยอมรับข้อตกลงการใช้งาน PDPA</span>
                 </label>
             </div>
-            <button type="button" id="submitBtn" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Submit</button>
+            <button type="button" id="submitBtn" class="bg-gray-800 text-white py-2 px-4 rounded-lg w-full">Submit</button>
         </form>
     </div>
 
@@ -76,7 +75,7 @@
 
         // LINE LIFF Integration
         window.onload = function () {
-            initializeLiff();
+            // initializeLiff();
         };
 
         async function initializeLiff() {
