@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>test</title>
+    <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
@@ -16,6 +16,7 @@
         <div class="w-12 h-12 bg-gray-300 rounded flex items-center justify-center mb-4">
             <img src="https://via.placeholder.com/100" alt="profilePicture" id="profilePictureImg" class="w-12 h-12 text-white rounded">
         </div>
+        <!-- Form -->
         <form>
             <div class="mb-4">
                 <label for="displayName" class="block text-sm font-medium text-gray-600">Display Name</label>
@@ -25,6 +26,18 @@
                 <label for="userlineId" class="block text-sm font-medium text-gray-600">User LINE ID</label>
                 <input type="text" id="userlineId" name="userlineId" placeholder="Enter User LINE ID" class="mt-1 p-2 border rounded-md w-full">
             </div>
+            <div class="mb-4">
+                <label class="inline-flex items-center">
+                    <input type="checkbox" class="form-checkbox text-blue-600" id="termsAccept">
+                    <span class="ml-2">ยอมรับข้อตกลงการใช้งาน</span>
+                </label>
+            </div>
+            <div class="mb-4">
+                <label class="inline-flex items-center">
+                    <input type="checkbox" class="form-checkbox text-blue-600" id="pdpaAccept">
+                    <span class="ml-2">ยอมรับข้อตกลงการใช้งาน PDPA</span>
+                </label>
+            </div>
             <button type="button" id="submitBtn" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Submit</button>
         </form>
     </div>
@@ -33,13 +46,22 @@
         let url = "https://script.google.com/macros/s/AKfycbwVtzSmp54Mhflz8rSqMoIuXAsHgS4KIRkdZ44Wilzxe5EMf-k--QggdFkNmiFxNQh-aA/exec";
         let displayNameInput = document.getElementById("displayName");
         let userlineIdInput = document.getElementById("userlineId");
+        let termsAcceptCheckbox = document.getElementById("termsAccept");
+        let pdpaAcceptCheckbox = document.getElementById("pdpaAccept");
         let submitBtn = document.getElementById("submitBtn");
         let profilePictureImg = document.getElementById("profilePictureImg");
 
         submitBtn.addEventListener('click', () => {
+            if (!termsAcceptCheckbox.checked || !pdpaAcceptCheckbox.checked) {
+                alert("โปรดยอมรับทั้งข้อตกลงการใช้งานและ PDPA");
+                return;
+            }
+
             let obj = {
                 displayName: displayNameInput.value,
                 userlineId: userlineIdInput.value,
+                termsAccepted: termsAcceptCheckbox.checked ? "ยอมรับ" : "ไม่ยอมรับ",
+                pdpaAccepted: pdpaAcceptCheckbox.checked ? "ยอมรับ" : "ไม่ยอมรับ",
                 profilePicture: profilePictureImg.src
             };
 
