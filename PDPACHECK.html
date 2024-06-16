@@ -10,11 +10,9 @@
       var userId = document.getElementById('userId').value;
       var apiUrl = 'https://script.google.com/macros/s/AKfycbzZ8x4snul8yVOSM11UNcvtLCVjqoI96LJ5dH_CJ7s4hdBvBGz5HjT2pEboX0Yx5DaJ/exec'; // Replace with your Google Apps Script API URL
 
-
       try {
         let response = await fetch(apiUrl + '?userId=' + encodeURIComponent(userId));
         let data = await response.json();
-
 
         var result = document.getElementById('result');
         if (data.found) {
@@ -34,50 +32,51 @@
     }
   </script>
   <script>
-     // LINE LIFF Integration
-     window.onload = function () {
-            initializeLiff();
-        };
+    // LINE LIFF Integration
+    window.onload = function () {
+      initializeLiff();
+    };
 
-        async function initializeLiff() {
-            try {
-                await liff.init({ liffId: '2005629952-gbbqOpay' });
+    async function initializeLiff() {
+      try {
+        await liff.init({ liffId: '2005629952-gbbqOpay' });
 
-                if (liff.isLoggedIn()) {
-                    getUserProfile();
-                } else {
-                    liff.login();
-                }
-            } catch (error) {
-                console.error('LIFF initialization failed', error);
-            }
+        if (liff.isLoggedIn()) {
+          getUserProfile();
+        } else {
+          liff.login();
         }
+      } catch (error) {
+        console.error('LIFF initialization failed', error);
+      }
+    }
 
-        async function getUserProfile() {
-            try {
-                const profile = await liff.getProfile();
-                document.getElementById('displayName').value = profile.displayName;
-                document.getElementById('userId').value = profile.userId;
-                document.getElementById('profilePictureImg').src = profile.pictureUrl;
-            } catch (error) {
-                console.error('Error getting profile data:', error);
-            }
-        }
-    </script>
+    async function getUserProfile() {
+      try {
+        const profile = await liff.getProfile();
+        document.getElementById('displayName').value = profile.displayName;
+        document.getElementById('userId').value = profile.userId;
+        document.getElementById('profilePictureImg').src = profile.pictureUrl;
 
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+        // Automatically check the user ID
+        checkUserId();
+      } catch (error) {
+        console.error('Error getting profile data:', error);
+      }
+    }
   </script>
+
+  <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
   <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
     <h1 class="text-2xl font-bold mb-6 text-center text-blue-600">Check User ID</h1>
     <form onsubmit="event.preventDefault(); checkUserId();" class="flex flex-col space-y-4">
-        <input type="text" id="displayName" name="displayName" placeholder="displayName" class="ml-3 text-lg font-medium" >
-        <input type="text" id="userlineId" name="userlineId" placeholder="Enter User LINE ID" class="mt-1 p-2 border rounded-md w-full hidden">
-      <label for="userId" class="text-lg font-medium">User ID:</label>
-      <input type="text" id="userId" name="userId" required class="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-      <input type="submit" value="Check" class="bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 cursor-pointer">
+      <input type="text" id="displayName" name="displayName" placeholder="Display Name" class="ml-3 text-lg font-medium hidden">
+      <input type="text" id="userId" name="userId" required class="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 hidden">
+      <input type="submit" value="Check" class="bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 cursor-pointer hidden">
     </form>
+    <img id="profilePictureImg" alt="Profile Picture" class="mt-4 rounded-full w-24 h-24 mx-auto" hidden>
     <div id="result" class="mt-6"></div>
   </div>
 </body>
