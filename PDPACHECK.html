@@ -6,7 +6,27 @@
   <title>Check User ID</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-
+ <style>
+        /* Animation Styles */
+        #loadingAnimation {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+        }
+        #loadingAnimation svg {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
   <script>
     // LINE LIFF Integration
     window.onload = function () {
@@ -33,6 +53,8 @@
         document.getElementById('userId').value = profile.userId;
         document.getElementById('profilePictureImg').src = profile.pictureUrl;
         checkUserId();
+         // Show loading animation
+            loadingAnimation.style.display = "block";
       } catch (error) {
         console.error('Error getting profile data:', error);
       }
@@ -56,9 +78,10 @@
         } else {
           result.innerHTML = 'User ID not found in DATA sheet.';
           result.className = 'text-red-500 mt-4 p-4 bg-red-100 rounded-md';
-          alert('ลงทะเบียนด้วย'); // Show popup when user ID is not found
           // Hide check user ID div
           document.getElementById('checkUserIdDiv').style.display = 'none';
+           // Show loading animation
+            loadingAnimation.style.display = "block";
           // Show PDPA form
           document.getElementById('pdpaForm').style.display = 'block';
           document.getElementById('pdpaName').value = document.getElementById('displayName').value;
@@ -98,9 +121,11 @@
       .then(response => response.text())
       .then(data => {
         console.log(data);
-        alert('ลงทะเบียนสำเร็จแล้ว');
+         // Show loading animation
+            loadingAnimation.style.display = "block";
         // Hide PDPA form
         document.getElementById('pdpaForm').style.display = 'none';
+        
       })
       .catch(error => {
         console.error('Error:', error);
@@ -160,5 +185,11 @@
       <button type="submit" id="submitBtn" class="bg-gray-800 text-white py-2 px-4 rounded-lg w-full">Submit</button>
     </form>
   </div>
+     <div id="loadingAnimation">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 10a7 7 0 0114 0H3zm0 1h14a7 7 0 01-14 0zm0 1a7 7 0 0014 0H3z" clip-rule="evenodd" />
+        </svg>
+        <p class="text-white mt-2">กำลังโหลด...</p>
+    </div>
 </body>
 </html>
