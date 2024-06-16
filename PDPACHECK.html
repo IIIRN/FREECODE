@@ -97,21 +97,16 @@
 
         // Check PDPA Acceptance
         window.onload = function () {
-             if (!localStorage.getItem('pdpaAccepted')) {
-                 pdpaPopup.classList.remove('hidden');
-             } else {
-                 mainContent.classList.remove('hidden');
-                 initializeLiff();
-             }
+            initializeLiff();
         };
 
-        // LINE LIFF Integration
         async function initializeLiff() {
             try {
                 await liff.init({ liffId: '2005629952-gbbqOpay' });
 
                 if (liff.isLoggedIn()) {
-                    getUserProfile();
+                    await getUserProfile();
+                    checkPdpaAcceptance();
                 } else {
                     liff.login();
                 }
@@ -123,11 +118,27 @@
         async function getUserProfile() {
             try {
                 const profile = await liff.getProfile();
-                document.getElementById('displayName').value = profile.displayName;
-                document.getElementById('userlineId').value = profile.userId;
-                document.getElementById('profilePictureImg').src = profile.pictureUrl;
+                displayNameInput.value = profile.displayName;
+                userlineIdInput.value = profile.userId;
+                profilePictureImg.src = profile.pictureUrl;
             } catch (error) {
                 console.error('Error getting profile data:', error);
+            }
+        }
+
+        async function checkPdpaAcceptance() {
+            try {
+                const userlineId = userlineIdInput.value;
+                const response = await fetch(url + `?userlineId=${userlineId}`);
+                const result = await response.json();
+
+                if (result.userExists) {
+                    mainContent.classList.remove('hidden');
+                } else {
+                    pdpaPopup.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error checking PDPA acceptance:', error);
             }
         }
     </script>
