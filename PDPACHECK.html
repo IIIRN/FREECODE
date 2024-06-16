@@ -98,7 +98,8 @@
       .then(response => response.text())
       .then(data => {
         console.log(data);
-        alert('ลงทะเบียนสำเร็จแล้ว');
+        // Reload the page
+        location.reload();
         // Hide PDPA form
         document.getElementById('pdpaForm').style.display = 'none';
       })
