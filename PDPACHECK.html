@@ -56,7 +56,7 @@
         async function getUserProfile() {
             try {
                 const profile = await liff.getProfile();
-                document.getElementById('displayName').value = profile.displayName;
+                 document.getElementById('displayName').value = profile.displayName;
                 document.getElementById('userlineId').value = profile.userId;
                 document.getElementById('profilePictureImg').src = profile.pictureUrl;
             } catch (error) {
