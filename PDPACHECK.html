@@ -8,7 +8,7 @@
   <script>
     async function checkUserId() {
       var userId = document.getElementById('userId').value;
-      var apiUrl = 'https://script.google.com/macros/s/AKfycbzZ8x4snul8yVOSM11UNcvtLCVjqoI96LJ5dH_CJ7s4hdBvBGz5HjT2pEboX0Yx5DaJ/exec'; // Replace with your Google Apps Script API URL
+      var apiUrl = 'https://script.google.com/macros/s/AKfycbxPowjHrdtIboJ6CgMQ8dMOsqz7gH5MOrDXTH4VOxf0-bJ4hle6qsEZaEiDS_z1G3tH/exec'; // Replace with your Google Apps Script API URL
 
       try {
         let response = await fetch(apiUrl + '?userId=' + encodeURIComponent(userId));
@@ -24,48 +24,85 @@
         } else {
           result.innerHTML = 'User ID not found in DATA sheet.';
           result.className = 'text-red-500 mt-4 p-4 bg-red-100 rounded-md';
-          alert('ลงทะเบียนด้วย'); // Show popup when user ID is not found
+          showModal(); // Show popup when user ID is not found
         }
       } catch (error) {
         console.error('Error:', error);
       }
     }
-  </script>
-  <script>
-    // LINE LIFF Integration
-    window.onload = function () {
+
+    function showModal() {
+      document.getElementById('modal').classList.remove('hidden');
+    }
+
+    function hideModal() {
+      document.getElementById('modal').classList.add('hidden');
+    }
+
+    function initializeLiff() {
+      liff.init({ liffId: '2005629952-gbbqOpay' })
+        .then(() => {
+          if (liff.isLoggedIn()) {
+            getUserProfile();
+          } else {
+            liff.login();
+          }
+        })
+        .catch(err => {
+          console.error('LIFF initialization failed', err);
+        });
+    }
+
+    function getUserProfile() {
+      liff.getProfile()
+        .then(profile => {
+          document.getElementById('displayName').value = profile.displayName;
+          document.getElementById('userId').value = profile.userId;
+          document.getElementById('profilePictureImg').src = profile.pictureUrl;
+          checkUserId(); // Automatically check the user ID
+        })
+        .catch(err => {
+          console.error('Error getting profile data:', err);
+        });
+    }
+
+    window.onload = function() {
       initializeLiff();
-    };
-
-    async function initializeLiff() {
-      try {
-        await liff.init({ liffId: '2005629952-gbbqOpay' });
-
-        if (liff.isLoggedIn()) {
-          getUserProfile();
-        } else {
-          liff.login();
-        }
-      } catch (error) {
-        console.error('LIFF initialization failed', error);
-      }
     }
 
-    async function getUserProfile() {
-      try {
-        const profile = await liff.getProfile();
-        document.getElementById('displayName').value = profile.displayName;
-        document.getElementById('userId').value = profile.userId;
-        document.getElementById('profilePictureImg').src = profile.pictureUrl;
+    function submitUserDetails() {
+      let url = "https://script.google.com/macros/s/AKfycbxPowjHrdtIboJ6CgMQ8dMOsqz7gH5MOrDXTH4VOxf0-bJ4hle6qsEZaEiDS_z1G3tH/exec";
+      let displayNameInput = document.getElementById("displayName");
+      let userlineIdInput = document.getElementById("userlineId");
+      let termsAcceptCheckbox = document.getElementById("termsAccept");
+      let pdpaAcceptCheckbox = document.getElementById("pdpaAccept");
+      let profilePictureImg = document.getElementById("profilePictureImg");
 
-        // Automatically check the user ID
-        checkUserId();
-      } catch (error) {
-        console.error('Error getting profile data:', error);
+      if (!termsAcceptCheckbox.checked || !pdpaAcceptCheckbox.checked) {
+        alert("โปรดยอมรับทั้งข้อตกลงการใช้งานและ PDPA");
+        return;
       }
+
+      let obj = {
+        displayName: displayNameInput.value,
+        userlineId: userlineIdInput.value,
+        termsAccepted: termsAcceptCheckbox.checked ? "ยอมรับ" : "ไม่ยอมรับ",
+        pdpaAccepted: pdpaAcceptCheckbox.checked ? "ยอมรับ" : "ไม่ยอมรับ",
+        profilePicture: profilePictureImg.src
+      };
+
+      fetch(url, {
+        method: "POST",
+        body: JSON.stringify(obj)
+      })
+      .then(response => response.text())
+      .then(data => {
+        console.log(data);
+        hideModal(); // Hide the modal after successful submission
+      })
+      .catch(error => console.error('Error:', error));
     }
   </script>
-
   <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -76,8 +113,51 @@
       <input type="text" id="userId" name="userId" required class="border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 hidden">
       <input type="submit" value="Check" class="bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 cursor-pointer hidden">
     </form>
-    <img id="profilePictureImg" alt="Profile Picture" class="mt-4 rounded-full w-24 h-24 mx-auto" hidden>
+    <img id="profilePictureImg" alt="Profile Picture" class="mt-4 rounded-full w-24 h-24 mx-auto hidden">
     <div id="result" class="mt-6"></div>
+  </div>
+
+  <!-- Modal Popup -->
+  <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-6 rounded-xl shadow-lg max-w-sm w-full">
+      <div class="flex items-center mb-4">
+        <span class="text-xl font-bold">IIIRN Studio</span>
+      </div>
+      <!-- Profile Picture Display -->
+      <div class="flex items-center mb-4">
+        <div class="w-14 h-14 bg-gray-300 rounded ml-2 flex items-center justify-center">
+          <img src="https://via.placeholder.com/100" alt="profilePicture" id="profilePictureImg" class="w-14 h-14 text-white rounded">
+        </div>
+        <input type="text" id="displayName" name="displayName" placeholder="Display Name" class="ml-3 text-lg font-medium" readonly>
+      </div>
+      <!-- Form -->
+      <form onsubmit="event.preventDefault(); submitUserDetails();">
+        <div class="mb-4 max-h-40 overflow-y-auto border p-4 rounded-lg shadow-sm">
+          <p class="text-sm text-gray-500 leading-tight ">
+            บริษัท ภายใต้นโยบายข้อมูลส่วนบุคคลฉบับนี้ และเมื่อท่านติดต่อกับบริษัท ส่งต่อเปิดเผยข้อมูลส่วนบุคคลของท่านให้แก่บริษัทเพื่อประโยชน์ในการติดต่อ ประสานงาน และ/หรือการให้บริการจากบริษัทให้แก่ท่าน บริษัทจะถือว่าท่านตกลงและยอมรับที่จะปฏิบัติตามนโยบายข้อมูลส่วนบุคคลฉบับนี้แล้ว ข้อมูลส่วนบุคคลที่เราจะรวบรวม บริษัทจะได้รับข้อมูลส่วนบุคคลของท่านได้จากหลายช่องทาง ดังนี้
+            </br>(1) ได้รับโดยตรง จากการติดต่อสื่อสารระหว่างบริษัทและท่าน
+            </br>(2) ได้รับทางอ้อมจากการอ้างอิงจากบุคคลอื่น ซึ่งท่านอาจให้ความยินยอมให้บุคคลที่สามเปิดเผยส่งต่อข้อมูลส่วนบุคคลของท่านให้บริษัท
+            </br>(3) เก็บรวบรวมโดยอัตโนมัติด้วยระบบ เมื่อท่านเข้ามาเยี่ยมชมเว็บไซต์ และ/หรือใช้บริการต่าง ๆ ของบริษัท
+          </p>
+        </div>
+        <div class="mb-4">
+          <input type="text" id="userlineId" name="userlineId" placeholder="Enter User LINE ID" class="mt-1 p-2 border rounded-md w-full hidden">
+        </div>
+        <div class="mb-4">
+          <label class="inline-flex items-center">
+            <input type="checkbox" class="form-checkbox text-blue-600" id="termsAccept">
+            <span class="ml-2 text-sm">ยอมรับข้อตกลงการใช้งาน</span>
+          </label>
+        </div>
+        <div class="mb-4">
+          <label class="inline-flex items-center">
+            <input type="checkbox" class="form-checkbox text-blue-600" id="pdpaAccept">
+            <span class="ml-2 text-sm">ยอมรับข้อตกลงการใช้งาน PDPA</span>
+          </label>
+        </div>
+        <button type="button" id="submitBtn" class="bg-gray-800 text-white py-2 px-4 rounded-lg w-full">Submit</button>
+      </form>
+    </div>
   </div>
 </body>
 </html>
