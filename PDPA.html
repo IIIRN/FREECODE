@@ -6,6 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Animation Styles */
+        #loadingAnimation {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+        }
+        #loadingAnimation svg {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
     <div class="bg-white p-6 rounded-xl shadow-lg max-w-sm w-full">
@@ -47,6 +68,14 @@
         </form>
     </div>
 
+    <!-- Loading Animation -->
+    <div id="loadingAnimation">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 10a7 7 0 0114 0H3zm0 1h14a7 7 0 01-14 0zm0 1a7 7 0 0014 0H3z" clip-rule="evenodd" />
+        </svg>
+        <p class="text-white mt-2">กำลังโหลด...</p>
+    </div>
+
     <script>
         let url = "https://script.google.com/macros/s/AKfycbwJQeH6VGYsY5qZ7WaeoJTUVYMbjIx2rKpis3EqKSnhWmyA0k3x6XFTRW_94EnhP0VK/exec";
         let displayNameInput = document.getElementById("displayName");
@@ -55,12 +84,16 @@
         let pdpaAcceptCheckbox = document.getElementById("pdpaAccept");
         let submitBtn = document.getElementById("submitBtn");
         let profilePictureImg = document.getElementById("profilePictureImg");
+        let loadingAnimation = document.getElementById("loadingAnimation");
 
         submitBtn.addEventListener('click', () => {
             if (!termsAcceptCheckbox.checked || !pdpaAcceptCheckbox.checked) {
                 alert("โปรดยอมรับทั้งข้อตกลงการใช้งานและ PDPA");
                 return;
             }
+
+            // Show loading animation
+            loadingAnimation.style.display = "block";
 
             let obj = {
                 displayName: displayNameInput.value,
@@ -75,13 +108,23 @@
                 body: JSON.stringify(obj)
             })
             .then(response => response.text())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error:', error));
+            .then(data => {
+                console.log(data);
+                // Hide loading animation
+                loadingAnimation.style.display = "none";
+                // Redirect to PDPACHECK.html
+                window.location.href = "PDPACHECK.html";
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Hide loading animation
+                loadingAnimation.style.display = "none";
+            });
         });
 
         // LINE LIFF Integration
         window.onload = function () {
-             initializeLiff();
+            initializeLiff();
         };
 
         async function initializeLiff() {
