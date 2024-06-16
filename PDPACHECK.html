@@ -17,16 +17,17 @@
             <div class="w-14 h-14 bg-gray-300 rounded ml-2 flex items-center justify-center">
                 <img src="https://via.placeholder.com/100" alt="profilePicture" id="profilePictureImg" class="w-14 h-14 text-white rounded">
             </div>
-                <input type="text" id="displayName" name="displayName" placeholder="Display Name" class="ml-3 text-lg font-medium" readonly>
+            <input type="text" id="displayName" name="displayName" placeholder="Display Name" class="ml-3 text-lg font-medium" readonly>
         </div>
         <!-- Form -->
         <form>
             <div class="mb-4 max-h-40 overflow-y-auto border p-4 rounded-lg shadow-sm">
                 <p class="text-sm text-gray-500 leading-tight ">
                     บริษัท ภายใต้นโยบายข้อมูลส่วนบุคคลฉบับนี้ และเมื่อท่านติดต่อกับบริษัท ส่งต่อเปิดเผยข้อมูลส่วนบุคคลของท่านให้แก่บริษัทเพื่อประโยชน์ในการติดต่อ ประสานงาน และ/หรือการให้บริการจากบริษัทให้แก่ท่าน บริษัทจะถือว่าท่านตกลงและยอมรับที่จะปฏิบัติตามนโยบายข้อมูลส่วนบุคคลฉบับนี้แล้ว ข้อมูลส่วนบุคคลที่เราจะรวบรวม บริษัทจะได้รับข้อมูลส่วนบุคคลของท่านได้จากหลายช่องทาง ดังนี้
-                </br>(1) ได้รับโดยตรง จากการติดต่อสื่อสารระหว่างบริษัทและท่าน
-                </br>(2) ได้รับทางอ้อมจากการอ้างอิงจากบุคคลอื่น ซึ่งท่านอาจให้ความยินยอมให้บุคคลที่สามเปิดเผยส่งต่อข้อมูลส่วนบุคคลของท่านให้บริษัท
-                </br>(3) เก็บรวบรวมโดยอัตโนมัติด้วยระบบ เมื่อท่านเข้ามาเยี่ยมชมเว็บไซต์ และ/หรือใช้บริการต่าง ๆ ของบริษัท
+                    </br>(1) ได้รับโดยตรง จากการติดต่อสื่อสารระหว่างบริษัทและท่าน
+                    </br>(2) ได้รับทางอ้อมจากการอ้างอิงจากบุคคลอื่น ซึ่งท่านอาจให้ความยินยอมให้บุคคลที่สามเปิดเผยส่งต่อข้อมูลส่วนบุคคลของท่านให้บริษัท
+                    </br>(3) เก็บรวบรวมโดยอัตโนมัติด้วยระบบ เมื่อท่านเข้ามาเยี่ยมชมเว็บไซต์ และ/หรือใช้บริการต่าง ๆ ของบริษัท
+                </p>
             </div>
             <div class="mb-4">
                 <input type="text" id="userlineId" name="userlineId" placeholder="Enter User LINE ID" class="mt-1 p-2 border rounded-md w-full hidden">
@@ -47,6 +48,21 @@
         </form>
     </div>
 
+    <!-- PDPA Popup -->
+    <div id="pdpaPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-xl shadow-lg max-w-md w-full">
+            <div class="mb-4">
+                <p class="text-sm text-gray-500 leading-tight">
+                    บริษัท ภายใต้นโยบายข้อมูลส่วนบุคคลฉบับนี้ และเมื่อท่านติดต่อกับบริษัท ส่งต่อเปิดเผยข้อมูลส่วนบุคคลของท่านให้แก่บริษัทเพื่อประโยชน์ในการติดต่อ ประสานงาน และ/หรือการให้บริการจากบริษัทให้แก่ท่าน บริษัทจะถือว่าท่านตกลงและยอมรับที่จะปฏิบัติตามนโยบายข้อมูลส่วนบุคคลฉบับนี้แล้ว ข้อมูลส่วนบุคคลที่เราจะรวบรวม บริษัทจะได้รับข้อมูลส่วนบุคคลของท่านได้จากหลายช่องทาง ดังนี้
+                    </br>(1) ได้รับโดยตรง จากการติดต่อสื่อสารระหว่างบริษัทและท่าน
+                    </br>(2) ได้รับทางอ้อมจากการอ้างอิงจากบุคคลอื่น ซึ่งท่านอาจให้ความยินยอมให้บุคคลที่สามเปิดเผยส่งต่อข้อมูลส่วนบุคคลของท่านให้บริษัท
+                    </br>(3) เก็บรวบรวมโดยอัตโนมัติด้วยระบบ เมื่อท่านเข้ามาเยี่ยมชมเว็บไซต์ และ/หรือใช้บริการต่าง ๆ ของบริษัท
+                </p>
+            </div>
+            <button id="pdpaConfirmBtn" class="bg-blue-600 text-white py-2 px-4 rounded-lg w-full">ยอมรับข้อตกลงการใช้งาน PDPA</button>
+        </div>
+    </div>
+
     <script>
         let url = "https://script.google.com/macros/s/AKfycbwVtzSmp54Mhflz8rSqMoIuXAsHgS4KIRkdZ44Wilzxe5EMf-k--QggdFkNmiFxNQh-aA/exec";
         let displayNameInput = document.getElementById("displayName");
@@ -55,6 +71,8 @@
         let pdpaAcceptCheckbox = document.getElementById("pdpaAccept");
         let submitBtn = document.getElementById("submitBtn");
         let profilePictureImg = document.getElementById("profilePictureImg");
+        let pdpaPopup = document.getElementById("pdpaPopup");
+        let pdpaConfirmBtn = document.getElementById("pdpaConfirmBtn");
 
         submitBtn.addEventListener('click', () => {
             if (!termsAcceptCheckbox.checked || !pdpaAcceptCheckbox.checked) {
@@ -79,11 +97,22 @@
             .catch(error => console.error('Error:', error));
         });
 
-        // LINE LIFF Integration
+        // Check PDPA Acceptance
         window.onload = function () {
-             initializeLiff();
+             if (!localStorage.getItem('pdpaAccepted')) {
+                 pdpaPopup.classList.remove('hidden');
+             } else {
+                 initializeLiff();
+             }
         };
 
+        pdpaConfirmBtn.addEventListener('click', () => {
+            localStorage.setItem('pdpaAccepted', 'true');
+            pdpaPopup.classList.add('hidden');
+            initializeLiff();
+        });
+
+        // LINE LIFF Integration
         async function initializeLiff() {
             try {
                 await liff.init({ liffId: '2005629952-gbbqOpay' });
