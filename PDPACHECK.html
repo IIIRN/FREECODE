@@ -8,58 +8,51 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="bg-white p-6 rounded-xl shadow-lg max-w-sm w-full">
-        <div class="flex items-center mb-4">
-            <span class="text-xl font-bold">IIIRN Studio</span>
-        </div>
-        <!-- Profile Picture Display -->
-        <div class="flex items-center mb-4">
-            <div class="w-14 h-14 bg-gray-300 rounded ml-2 flex items-center justify-center">
-                <img src="https://via.placeholder.com/100" alt="profilePicture" id="profilePictureImg" class="w-14 h-14 text-white rounded">
-            </div>
-            <input type="text" id="displayName" name="displayName" placeholder="Display Name" class="ml-3 text-lg font-medium" readonly>
-        </div>
-        <!-- Form -->
-        <form>
-            <div class="mb-4 max-h-40 overflow-y-auto border p-4 rounded-lg shadow-sm">
-                <p class="text-sm text-gray-500 leading-tight ">
-                    บริษัท ภายใต้นโยบายข้อมูลส่วนบุคคลฉบับนี้ และเมื่อท่านติดต่อกับบริษัท ส่งต่อเปิดเผยข้อมูลส่วนบุคคลของท่านให้แก่บริษัทเพื่อประโยชน์ในการติดต่อ ประสานงาน และ/หรือการให้บริการจากบริษัทให้แก่ท่าน บริษัทจะถือว่าท่านตกลงและยอมรับที่จะปฏิบัติตามนโยบายข้อมูลส่วนบุคคลฉบับนี้แล้ว ข้อมูลส่วนบุคคลที่เราจะรวบรวม บริษัทจะได้รับข้อมูลส่วนบุคคลของท่านได้จากหลายช่องทาง ดังนี้
-                    </br>(1) ได้รับโดยตรง จากการติดต่อสื่อสารระหว่างบริษัทและท่าน
-                    </br>(2) ได้รับทางอ้อมจากการอ้างอิงจากบุคคลอื่น ซึ่งท่านอาจให้ความยินยอมให้บุคคลที่สามเปิดเผยส่งต่อข้อมูลส่วนบุคคลของท่านให้บริษัท
-                    </br>(3) เก็บรวบรวมโดยอัตโนมัติด้วยระบบ เมื่อท่านเข้ามาเยี่ยมชมเว็บไซต์ และ/หรือใช้บริการต่าง ๆ ของบริษัท
-                </p>
-            </div>
-            <div class="mb-4">
-                <input type="text" id="userlineId" name="userlineId" placeholder="Enter User LINE ID" class="mt-1 p-2 border rounded-md w-full hidden">
-            </div>
-            <div class="mb-4">
-                <label class="inline-flex items-center">
-                    <input type="checkbox" class="form-checkbox text-blue-600" id="termsAccept">
-                    <span class="ml-2 text-sm">ยอมรับข้อตกลงการใช้งาน</span>
-                </label>
-            </div>
-            <div class="mb-4">
-                <label class="inline-flex items-center">
-                    <input type="checkbox" class="form-checkbox text-blue-600" id="pdpaAccept">
-                    <span class="ml-2 text-sm">ยอมรับข้อตกลงการใช้งาน PDPA</span>
-                </label>
-            </div>
-            <button type="button" id="submitBtn" class="bg-gray-800 text-white py-2 px-4 rounded-lg w-full">Submit</button>
-        </form>
+    <!-- Main Content -->
+    <div id="mainContent" class="hidden">
+        <!-- Other content of the page can go here -->
     </div>
 
     <!-- PDPA Popup -->
-    <div id="pdpaPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white p-6 rounded-xl shadow-lg max-w-md w-full">
-            <div class="mb-4">
-                <p class="text-sm text-gray-500 leading-tight">
-                    บริษัท ภายใต้นโยบายข้อมูลส่วนบุคคลฉบับนี้ และเมื่อท่านติดต่อกับบริษัท ส่งต่อเปิดเผยข้อมูลส่วนบุคคลของท่านให้แก่บริษัทเพื่อประโยชน์ในการติดต่อ ประสานงาน และ/หรือการให้บริการจากบริษัทให้แก่ท่าน บริษัทจะถือว่าท่านตกลงและยอมรับที่จะปฏิบัติตามนโยบายข้อมูลส่วนบุคคลฉบับนี้แล้ว ข้อมูลส่วนบุคคลที่เราจะรวบรวม บริษัทจะได้รับข้อมูลส่วนบุคคลของท่านได้จากหลายช่องทาง ดังนี้
-                    </br>(1) ได้รับโดยตรง จากการติดต่อสื่อสารระหว่างบริษัทและท่าน
-                    </br>(2) ได้รับทางอ้อมจากการอ้างอิงจากบุคคลอื่น ซึ่งท่านอาจให้ความยินยอมให้บุคคลที่สามเปิดเผยส่งต่อข้อมูลส่วนบุคคลของท่านให้บริษัท
-                    </br>(3) เก็บรวบรวมโดยอัตโนมัติด้วยระบบ เมื่อท่านเข้ามาเยี่ยมชมเว็บไซต์ และ/หรือใช้บริการต่าง ๆ ของบริษัท
-                </p>
+    <div id="pdpaPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-xl shadow-lg max-w-sm w-full">
+            <div class="flex items-center mb-4">
+                <span class="text-xl font-bold">IIIRN Studio</span>
             </div>
-            <button id="pdpaConfirmBtn" class="bg-blue-600 text-white py-2 px-4 rounded-lg w-full">ยอมรับข้อตกลงการใช้งาน PDPA</button>
+            <!-- Profile Picture Display -->
+            <div class="flex items-center mb-4">
+                <div class="w-14 h-14 bg-gray-300 rounded ml-2 flex items-center justify-center">
+                    <img src="https://via.placeholder.com/100" alt="profilePicture" id="profilePictureImg" class="w-14 h-14 text-white rounded">
+                </div>
+                <input type="text" id="displayName" name="displayName" placeholder="Display Name" class="ml-3 text-lg font-medium" readonly>
+            </div>
+            <!-- Form -->
+            <form>
+                <div class="mb-4 max-h-40 overflow-y-auto border p-4 rounded-lg shadow-sm">
+                    <p class="text-sm text-gray-500 leading-tight">
+                        บริษัท ภายใต้นโยบายข้อมูลส่วนบุคคลฉบับนี้ และเมื่อท่านติดต่อกับบริษัท ส่งต่อเปิดเผยข้อมูลส่วนบุคคลของท่านให้แก่บริษัทเพื่อประโยชน์ในการติดต่อ ประสานงาน และ/หรือการให้บริการจากบริษัทให้แก่ท่าน บริษัทจะถือว่าท่านตกลงและยอมรับที่จะปฏิบัติตามนโยบายข้อมูลส่วนบุคคลฉบับนี้แล้ว ข้อมูลส่วนบุคคลที่เราจะรวบรวม บริษัทจะได้รับข้อมูลส่วนบุคคลของท่านได้จากหลายช่องทาง ดังนี้
+                        </br>(1) ได้รับโดยตรง จากการติดต่อสื่อสารระหว่างบริษัทและท่าน
+                        </br>(2) ได้รับทางอ้อมจากการอ้างอิงจากบุคคลอื่น ซึ่งท่านอาจให้ความยินยอมให้บุคคลที่สามเปิดเผยส่งต่อข้อมูลส่วนบุคคลของท่านให้บริษัท
+                        </br>(3) เก็บรวบรวมโดยอัตโนมัติด้วยระบบ เมื่อท่านเข้ามาเยี่ยมชมเว็บไซต์ และ/หรือใช้บริการต่าง ๆ ของบริษัท
+                    </p>
+                </div>
+                <div class="mb-4">
+                    <input type="text" id="userlineId" name="userlineId" placeholder="Enter User LINE ID" class="mt-1 p-2 border rounded-md w-full hidden">
+                </div>
+                <div class="mb-4">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" class="form-checkbox text-blue-600" id="termsAccept">
+                        <span class="ml-2 text-sm">ยอมรับข้อตกลงการใช้งาน</span>
+                    </label>
+                </div>
+                <div class="mb-4">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" class="form-checkbox text-blue-600" id="pdpaAccept">
+                        <span class="ml-2 text-sm">ยอมรับข้อตกลงการใช้งาน PDPA</span>
+                    </label>
+                </div>
+                <button type="button" id="submitBtn" class="bg-gray-800 text-white py-2 px-4 rounded-lg w-full">Submit</button>
+            </form>
         </div>
     </div>
 
@@ -72,7 +65,7 @@
         let submitBtn = document.getElementById("submitBtn");
         let profilePictureImg = document.getElementById("profilePictureImg");
         let pdpaPopup = document.getElementById("pdpaPopup");
-        let pdpaConfirmBtn = document.getElementById("pdpaConfirmBtn");
+        let mainContent = document.getElementById("mainContent");
 
         submitBtn.addEventListener('click', () => {
             if (!termsAcceptCheckbox.checked || !pdpaAcceptCheckbox.checked) {
@@ -95,6 +88,10 @@
             .then(response => response.text())
             .then(data => console.log(data))
             .catch(error => console.error('Error:', error));
+
+            localStorage.setItem('pdpaAccepted', 'true');
+            pdpaPopup.classList.add('hidden');
+            mainContent.classList.remove('hidden');
         });
 
         // Check PDPA Acceptance
@@ -102,15 +99,10 @@
              if (!localStorage.getItem('pdpaAccepted')) {
                  pdpaPopup.classList.remove('hidden');
              } else {
+                 mainContent.classList.remove('hidden');
                  initializeLiff();
              }
         };
-
-        pdpaConfirmBtn.addEventListener('click', () => {
-            localStorage.setItem('pdpaAccepted', 'true');
-            pdpaPopup.classList.add('hidden');
-            initializeLiff();
-        });
 
         // LINE LIFF Integration
         async function initializeLiff() {
