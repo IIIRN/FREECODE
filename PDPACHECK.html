@@ -40,7 +40,7 @@
 
     async function checkUserId() {
       var userId = document.getElementById('userId').value;
-      var apiUrl = 'https://script.google.com/macros/s/AKfycbxH91j-8qpLqoJ8RFU64GBbg21qTgc_j1plZjXqRal2I4Zu1V4IhuW4lJ7wNJkLx4Dj/exec'; // Replace with your Google Apps Script API URL
+      var apiUrl = 'https://script.google.com/macros/s/AKfycbx1uQiJXms2ETsBtzUYxM2WBSJbV3WbWBd77a1zyNxzbpyXo-SDmkBOIZKstYrsMtRwAw/exec'; // Replace with your Google Apps Script API URL
 
       try {
         let response = await fetch(apiUrl + '?userId=' + encodeURIComponent(userId));
@@ -70,7 +70,7 @@
     }
 
     function submitPDPA() {
-      let url = "https://script.google.com/macros/s/AKfycbxH91j-8qpLqoJ8RFU64GBbg21qTgc_j1plZjXqRal2I4Zu1V4IhuW4lJ7wNJkLx4Dj/exec";
+      let url = "https://script.google.com/macros/s/AKfycbx1uQiJXms2ETsBtzUYxM2WBSJbV3WbWBd77a1zyNxzbpyXo-SDmkBOIZKstYrsMtRwAw/exec";
       let displayNameInput = document.getElementById("pdpaName");
       let userlineIdInput = document.getElementById("userId");
       let termsAcceptCheckbox = document.getElementById("termsAccept");
