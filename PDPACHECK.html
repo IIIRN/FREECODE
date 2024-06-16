@@ -12,11 +12,11 @@
         <div class="flex items-center mb-4">
             <span class="text-xl font-bold">IIIRN Studio</span>
         </div>
+        <!-- Profile Picture Display -->
+        <div class="w-12 h-12 bg-gray-300 rounded flex items-center justify-center mb-4">
+            <img src="https://via.placeholder.com/100" alt="profilePicture" id="profilePictureImg" class="w-12 h-12 text-white rounded">
+        </div>
         <form>
-             <div class="w-12 h-12 bg-gray-300 rounded flex items-center justify-center">
-                <img src="https://via.placeholder.com/100" alt="profilePicture" id="profilePicture" class="w-12 h-12 text-white rounded">
-            </div>
-
             <div class="mb-4">
                 <label for="displayName" class="block text-sm font-medium text-gray-600">Display Name</label>
                 <input type="text" id="displayName" name="displayName" placeholder="Enter Display Name" class="mt-1 p-2 border rounded-md w-full">
@@ -30,17 +30,17 @@
     </div>
 
     <script>
-        let url = "https://script.google.com/macros/s/AKfycbwVtzSmp54Mhflz8rSqMoIuXAsHgS4KIRkdZ44Wilzxe5EMf-k--QggdFkNmiFxNQh-aA/exec";
+        let url = "https://script.google.com/macros/s/AKfycbzAFdInRYxke2dUhU7CRzbY3J6vhCC8LuRp_URQxQRFB2puuSJVgYcUmYsWp-EixZeV0g/exec";
         let displayNameInput = document.getElementById("displayName");
-        let profilePictureInput = document.getElementById("profilePicture");
         let userlineIdInput = document.getElementById("userlineId");
         let submitBtn = document.getElementById("submitBtn");
+        let profilePictureImg = document.getElementById("profilePictureImg");
 
         submitBtn.addEventListener('click', () => {
             let obj = {
                 displayName: displayNameInput.value,
-                profilePicture: profilePictureInput.value,
-                userlineId: userlineIdInput.value
+                userlineId: userlineIdInput.value,
+                profilePicture: profilePictureImg.src
             };
 
             fetch(url, {
@@ -51,12 +51,10 @@
             .then(data => console.log(data))
             .catch(error => console.error('Error:', error));
         });
-    </script>
 
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-    <script>
+        // LINE LIFF Integration
         window.onload = function () {
-             initializeLiff();
+            initializeLiff();
         };
 
         async function initializeLiff() {
@@ -77,12 +75,14 @@
             try {
                 const profile = await liff.getProfile();
                 document.getElementById('displayName').value = profile.displayName;
-                document.getElementById('profilePicture').value = profile.pictureUrl; // Using pictureUrl instead of profilePicture
                 document.getElementById('userlineId').value = profile.userId;
+                document.getElementById('profilePictureImg').src = profile.pictureUrl;
             } catch (error) {
                 console.error('Error getting profile data:', error);
             }
         }
     </script>
+
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 </body>
 </html>
