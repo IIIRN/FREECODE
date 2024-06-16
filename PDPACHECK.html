@@ -1,114 +1,88 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDPA Agreement</title>
+    <title>Document</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f3f4f6;
-        }
-    </style>
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script> <!-- LIFF SDK -->
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+    <div class="bg-white p-6 rounded-xl shadow-lg max-w-sm w-full">
         <div class="flex items-center mb-4">
-            <img src="path_to_logo_image" alt="SlipOK Logo" class="w-12 h-12 mr-3">
-            <span class="text-xl font-bold">SlipOK</span>
+            <span class="text-xl font-bold">IIIRN Studio</span>
         </div>
-
-        <div class="flex items-center mb-4">
-            <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
-                <img id="profilePicture" class="w-12 h-12 rounded-full" src="default_image.png" alt="Profile Picture">
+        <form>
+            <div class="mb-4">
+                <label for="profilePicture" class="block text-sm font-medium text-gray-600">Profile Picture URL</label>
+                <input type="text" id="profilePicture" name="profilePicture" placeholder="Enter Profile Picture URL" class="mt-1 p-2 border rounded-md w-full">
             </div>
-            <span class="ml-3 text-lg font-medium" id="displayName">กำลังโหลด...</span>
-        </div>
-
-        <div class="mb-4 max-h-40 overflow-y-auto">
-            <p class="text-sm leading-tight">
-                บริษัท ภายใต้นโยบายข้อมูลส่วนบุคคลฉบับนี้ และเมื่อท่านติดต่อกับบริษัท ส่งต่อเปิดเผยข้อมูลส่วนบุคคลของท่านให้แก่บริษัทเพื่อประโยชน์ในการติดต่อ ประสานงาน และ/หรือการให้บริการจากบริษัทให้แก่ท่าน บริษัทจะถือว่าท่านตกลงและยอมรับที่จะปฏิบัติตามนโยบายข้อมูลส่วนบุคคลฉบับนี้แล้ว ข้อมูลส่วนบุคคลที่เราจะรวบรวม บริษัทจะได้รับข้อมูลส่วนบุคคลของท่านได้จากหลายช่องทาง ดังนี้
-                (1) ได้รับโดยตรง จากการติดต่อสื่อสารระหว่างบริษัทและท่าน
-                (2) ได้รับทางอ้อมจากการอ้างอิงจากบุคคลอื่น ซึ่งท่านอาจให้ความยินยอมให้บุคคลที่สามเปิดเผยส่งต่อข้อมูลส่วนบุคคลของท่านให้บริษัท
-                (3) เก็บรวบรวมโดยอัตโนมัติด้วยระบบ เมื่อท่านเข้ามาเยี่ยมชมเว็บไซต์ และ/หรือใช้บริการต่าง ๆ ของบริษัท
-            </p>
-        </div>
-
-        <div class="mb-4">
-            <label class="inline-flex items-center">
-                <input type="checkbox" class="form-checkbox text-blue-600" id="termsAccept">
-                <span class="ml-2">ยอมรับข้อตกลงการใช้งาน</span>
-            </label>
-        </div>
-
-        <div class="mb-4">
-            <label class="inline-flex items-center">
-                <input type="checkbox" class="form-checkbox text-blue-600" id="pdpaAccept">
-                <span class="ml-2">ยอมรับข้อตกลงการใช้งาน PDPA</span>
-            </label>
-        </div>
-
-        <button id="startButton" class="bg-blue-600 text-white py-2 px-4 rounded-lg w-full">เริ่มใช้งาน</button>
-
-        <!-- Hidden input fields to store user data -->
-        <input type="hidden" id="userlineId">
-        <input type="hidden" id="displayNameInput">
+            <div class="mb-4">
+                <label for="displayName" class="block text-sm font-medium text-gray-600">Display Name</label>
+                <input type="text" id="displayName" name="displayName" placeholder="Enter Display Name" class="mt-1 p-2 border rounded-md w-full">
+            </div>
+            <div class="mb-4">
+                <label for="userlineId" class="block text-sm font-medium text-gray-600">User LINE ID</label>
+                <input type="text" id="userlineId" name="userlineId" placeholder="Enter User LINE ID" class="mt-1 p-2 border rounded-md w-full">
+            </div>
+            <button type="button" id="submitBtn" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Submit</button>
+        </form>
     </div>
 
     <script>
+        let url = "https://script.google.com/macros/s/AKfycbwVtzSmp54Mhflz8rSqMoIuXAsHgS4KIRkdZ44Wilzxe5EMf-k--QggdFkNmiFxNQh-aA/exec";
+        let displayNameInput = document.getElementById("displayName");
+        let profilePictureInput = document.getElementById("profilePicture");
+        let userlineIdInput = document.getElementById("userlineId");
+        let submitBtn = document.getElementById("submitBtn");
+
+        submitBtn.addEventListener('click', () => {
+            let obj = {
+                displayName: displayNameInput.value,
+                profilePicture: profilePictureInput.value,
+                userlineId: userlineIdInput.value
+            };
+
+            fetch(url, {
+                method: "POST",
+                body: JSON.stringify(obj)
+            })
+            .then(response => response.text())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
         window.onload = function () {
-            initializeLiff();
+            // initializeLiff();
         };
 
         async function initializeLiff() {
-            await liff.init({ liffId: '2005629952-1e7WxQKl' }); // Replace with your LIFF ID
+            try {
+                await liff.init({ liffId: '2005629952-1e7WxQKl' });
 
-            if (liff.isLoggedIn()) {
-                getUserProfile();
-            } else {
-                liff.login();
+                if (liff.isLoggedIn()) {
+                    getUserProfile();
+                } else {
+                    liff.login();
+                }
+            } catch (error) {
+                console.error('LIFF initialization failed', error);
             }
         }
 
         async function getUserProfile() {
             try {
                 const profile = await liff.getProfile();
-                document.getElementById('displayName').textContent = profile.displayName;
-                document.getElementById('profilePicture').src = profile.pictureUrl || "default_image.png";
+                document.getElementById('displayName').value = profile.displayName;
+                document.getElementById('profilePicture').value = profile.pictureUrl; // Using pictureUrl instead of profilePicture
                 document.getElementById('userlineId').value = profile.userId;
-                document.getElementById('displayNameInput').value = profile.displayName;
             } catch (error) {
                 console.error('Error getting profile data:', error);
             }
         }
-
-        document.getElementById('startButton').addEventListener('click', function () {
-            const termsAccept = document.getElementById('termsAccept').checked;
-            const pdpaAccept = document.getElementById('pdpaAccept').checked;
-
-            if (termsAccept && pdpaAccept) {
-                const data = {
-                    userlineId: document.getElementById('userlineId').value,
-                    displayName: document.getElementById('displayNameInput').value,
-                    termsAccept: termsAccept,
-                    pdpaAccept: pdpaAccept
-                };
-
-                fetch('https://script.google.com/macros/s/AKfycbzDmc1ScXWjiSbRdzyQrtw6I4RAWKtl-lmXlS8bgrJHBXAfyVq-C3ClXSHoReq-euC7PA/exec', { // Replace 'YOUR_GAS_WEB_APP_URL' with the actual URL
-                    method: 'POST',
-                    body: JSON.stringify(data),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.text())
-                .then(result => alert(result))
-                .catch(error => console.error('Error:', error));
-            } else {
-                alert('กรุณายอมรับข้อตกลงทั้งหมดก่อนเริ่มใช้งาน');
-            }
-        });
     </script>
 </body>
 </html>
