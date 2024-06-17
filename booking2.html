@@ -137,7 +137,7 @@
                 });
                 calendarDays.appendChild(dayElement);
             }
-            scrollToCurrentDay(); // Call scroll function after populating days
+            setTimeout(scrollToCurrentDay, 100); // Delay to ensure DOM is fully rendered
         }
 
         function scrollToCurrentDay() {
