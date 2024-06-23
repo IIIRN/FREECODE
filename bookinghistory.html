@@ -11,6 +11,13 @@
     <script>
         window.onload = function () {
             initializeLiff();
+            const userlineidInput = document.getElementById('userlineid');
+            userlineidInput.addEventListener('input', function() {
+                const userlineid = userlineidInput.value.trim();
+                if (userlineid) {
+                    applyFilter(userlineid);
+                }
+            });
         };
 
         async function initializeLiff() {
@@ -30,7 +37,6 @@
             try {
                 const profile = await liff.getProfile();
                 document.getElementById('userlineid').value = profile.userId;
-                document.getElementById('displayName').value = profile.displayName;
                 applyFilter(profile.userId); // Apply filter immediately using the user's Line ID
             } catch (error) {
                 console.error('Error getting profile data:', error);
@@ -75,7 +81,7 @@
                 historyTable.innerHTML = '<p class="text-center text-gray-500">ไม่มีข้อมูลการนัดหมาย</p>';
                 return;
             }
-            bookings.forEach((booking, index) => {
+            bookings.forEach((booking) => {
                 const bookingDiv = document.createElement('div');
                 bookingDiv.classList.add('bg-gray-200', 'p-4', 'rounded-md', 'space-y-2');
 
@@ -129,7 +135,7 @@
         <h1 class="text-2xl font-bold mb-6">ประวัติการนัดหมาย</h1>
         <div class="mb-6">
             <input id="userlineid" type="text" class="border p-2 rounded-md w-full" placeholder="กรอก User Line ID เพื่อกรองนัดหมาย">
-            <button onclick="applyFilter(document.getElementById('userlineid').value)" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">กรอง</button>
+            <!-- Removed the button for manual filter application -->
         </div>
         <div id="historyTable" class="space-y-4">
             <!-- การนัดหมายจะถูกแสดงที่นี่ -->
