@@ -48,8 +48,7 @@
 <body class="bg-gray-100 m-5">
     <div class="max-w-lg mx-auto mt-10 bg-white p-6 rounded-lg shadow-lg">
         <h1 class="text-2xl font-bold mb-6">ประวัติการนัดหมาย</h1>
-        <!-- ซ่อน form การกรอง -->
-        <div class="mb-6" >
+        <div class="mb-6">
             <input id="filterInput" type="text" class="border p-2 rounded-md w-full" placeholder="กรอก User Line ID เพื่อกรองนัดหมาย">
             <button onclick="applyFilter(document.getElementById('filterInput').value)" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">กรอง</button>
         </div>
@@ -65,7 +64,7 @@
                     return;
                 }
 
-                const response = await fetch('https://script.google.com/macros/s/AKfycbxiCwD7UcEyCwtecXM84ycj_RhW3xXQngdt-BONQVJK1S43Np9hSRdaxH3IyhjFnYO0/exec?action=fetchBookings');
+                const response = await fetch('https://script.google.com/macros/s/AKfycbxC6ZA7AI9u6gycKkJ54PBv5aqLGihvioSeM1yKkw2Bair_LqGMLNbpAQIfn_CmahvF/exec?action=fetchBookings');
                 if (!response.ok) throw new Error('Network response was not ok');
 
                 const bookings = await response.json();
@@ -76,6 +75,12 @@
                 Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถโหลดข้อมูลได้ โปรดลองใหม่อีกครั้ง', 'error');
                 document.getElementById('historyTable').innerHTML = '<p class="text-center text-gray-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>';
             }
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            const date = new Date(dateString);
+            return date.toLocaleString('th-TH', options);
         }
 
         function displayHistory(bookings) {
@@ -97,7 +102,7 @@
                 bookingDiv.innerHTML = `
                     <p><strong>บริการ:</strong> ${booking.service}</p>
                     <p><strong>บุคลากร:</strong> ${booking.personnel}</p>
-                    <p><strong>วันที่/เวลา:</strong> ${booking.date}</p>
+                    <p><strong>วันที่/เวลา:</strong> ${formatDate(booking.date)}</p>
                     <p><strong>ยืนยันด้วยโทรศัพย์:</strong> ${booking.time}</p>
                     <p><strong>สถานะ:</strong> ${booking.status}</p>
                     ${cancelButtonHtml}
@@ -119,7 +124,7 @@
                 });
 
                 if (result.isConfirmed) {
-                    const response = await fetch(`https://script.google.com/macros/s/AKfycbxiCwD7UcEyCwtecXM84ycj_RhW3xXQngdt-BONQVJK1S43Np9hSRdaxH3IyhjFnYO0/exec?action=cancelBooking&id=${bookingId}`, {
+                    const response = await fetch(`https://script.google.com/macros/s/AKfycbxC6ZA7AI9u6gycKkJ54PBv5aqLGihvioSeM1yKkw2Bair_LqGMLNbpAQIfn_CmahvF/exec?action=cancelBooking&id=${bookingId}`, {
                         method: 'POST'
                     });
                     if (!response.ok) throw new Error('Network response was not ok');
