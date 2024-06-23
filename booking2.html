@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         .selected {
-            background-color: #000000;
+            background-color: #283890;
             color: white;
         }
         .no-scrollbar {
@@ -25,7 +25,7 @@
      <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
      <script>
          window.onload = function () {
-             initializeLiff(),getUserProfile();
+              initializeLiff(),getUserProfile();
          };
          async function initializeLiff() {
              await liff.init({ liffId: '2005629952-bng0VRoM' }); // Replace with your LIFF ID
@@ -48,49 +48,48 @@
          }
      </script>
 </head>
-<body class="bg-gray-100 m-5">
-    <div class="max-w-lg mx-auto mt-10 bg-white p-6 rounded-lg shadow-lg">
-        <h1 class="text-2xl font-bold mb-6">ฟอร์มนัดหมาย</h1>
-        <form id="bookingForm" class="space-y-4 pt-2" novalidate>
+<body class="m-5">
+    <div class="max-w-lg mx-auto mt-10 py-10 px-6 ">
+            <img class="img w-48 mx-auto " src="https://lh5.googleusercontent.com/d/1YvK9ND3FASRuYEFBz2hJI2qp7yUOpW2m" alt="">        
+            <form id="bookingForm" class="space-y-4 pt-2" novalidate>
             <input type="hidden" name="action" value="makeBooking">
-            <div id="step1">
+            <div id="step1" class="grid gap-4 max-w-sm mx-auto">
                 <div>
-                    <label for="userlineid" class="block font-medium">userlineid</label>
-                    <input type="text" id="userlineid" name="userlineid" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" id="userlineid" name="userlineid" required class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 hidden">
                 </div>
                 <div>
-                    <label for="service" class="block font-medium">บริการ:</label>
-                    <select id="service" name="service" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="service" class="block w-16 text-center text-sm bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">บริการ</label>
+                    <select id="service" name="service" required class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <!-- Options will be populated by JavaScript -->
                     </select>
                 </div>
                 <div>
-                    <label for="personnel" class="block font-medium">พนักงาน:</label>
-                    <select id="personnel" name="personnel" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="personnel" class="block text-sm">สาขา</label>
+                    <select id="personnel" name="personnel" required class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <!-- Options will be populated by JavaScript -->
                     </select>
                 </div>
                 <div>
-                    <label for="name" class="block font-medium">ชื่อ:</label>
-                    <input type="text" id="name" name="name" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="name" class="block text-sm">ชื่อ</label>
+                    <input type="text" id="name" name="name" required class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label for="phonenumber" class="block font-medium">เบอร์ติดต่อ:</label>
-                    <input type="text" id="phonenumber" name="phonenumber" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="phonenumber" class="block text-sm">เบอร์ติดต่อ</label>
+                    <input type="text" id="phonenumber" name="phonenumber" required class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
-                    <label for="note" class="block font-medium">รายละเอียดเพิ่มเติม</label>
-                    <input type="text" id="note" name="note" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="note" class="block text-sm">รายละเอียดเพิ่มเติม</label>
+                    <input type="textarea" id="note" name="note" required class="w-full h-24 px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
-                <div id="buttons" class="flex justify-between">
+                <div id="buttons" class="flex justify-between mt-8">
                     <button type="button" onclick="prevStep()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md">ย้อนกลับ</button>
                     <button type="button" onclick="nextStep()" class="px-4 py-2 bg-blue-500 text-white rounded-md">ถัดไป</button>
                 </div>
             </div>
-            <div id="step2" style="display:none;">
+            <div id="step2" class="grid gap-4 max-w-sm mx-auto" style="display:none;">
                 <div class="text-center font-semibold mb-4">
                     <div class="flex justify-center space-x-2">
-                        <select id="monthSelect" aria-label="Month" class="text-center text-gray-500 w-1/2 border-2 border-gray-300 rounded-md px-2 py-2">
+                        <select id="monthSelect" aria-label="Month" class="text-center text-gray-500 w-1/2 border-2 border-blue-700 rounded-md px-2 py-2">
                             <option value="0">มกราคม</option>
                             <option value="1">กุมภาพันธ์</option>
                             <option value="2">มีนาคม</option>
@@ -104,7 +103,7 @@
                             <option value="10">พฤศจิกายน</option>
                             <option value="11">ธันวาคม</option>
                         </select>
-                        <select id="yearSelect" aria-label="Year" class="text-center text-gray-500 w-1/2 border-2 border-gray-300 rounded-md px-2 py-2">
+                        <select id="yearSelect" aria-label="Year" class="text-center text-gray-500 w-1/2 border-2 border-blue-700 rounded-md px-2 py-2">
                             <!-- Options will be populated by JavaScript -->
                         </select>
                     </div>
@@ -117,9 +116,10 @@
                 <div id="availability" class="max-w-sm mx-auto space-y-2">
                     <!-- Time slots will be populated by JavaScript -->
                 </div>
+                <button type="button" onclick="prevStep()" class="mt-8 px-4 py-2 bg-gray-300 text-gray-700 rounded-md">ย้อนกลับ</button>
                 <div class="hidden">
-                    <label for="time" class="block font-medium">Time:</label>
-                    <input type="time" id="time" name="time" required readonly class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="time" class="block text-sm">Time:</label>
+                    <input type="time" id="time" name="time" required readonly class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div class="hidden text-center">
                     <input type="submit" value="Submit" class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
