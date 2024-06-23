@@ -12,7 +12,7 @@
         window.onload = function () {
             initializeLiff();
         };
-        
+
         async function initializeLiff() {
             try {
                 await liff.init({ liffId: '2005629952-2p0n3ERO' }); // Replace with your LIFF ID
@@ -25,22 +25,21 @@
                 console.error('LIFF Initialization failed', error);
             }
         }
-        
+
         async function getUserProfile() {
             try {
                 const profile = await liff.getProfile();
                 document.getElementById('userlineid').value = profile.userId;
                 document.getElementById('displayName').value = profile.displayName;
                 // Trigger search when user ID is retrieved
-                searchData();
+                applyFilter(profile.userId);
             } catch (error) {
                 console.error('Error getting profile data:', error);
             }
         }
 
-        function searchData() {
-            const userlineid = document.getElementById('userlineid').value.trim();
-            applyFilter(userlineid);
+        function applyFilter(userlineid) {
+            fetchHistory(userlineid);
         }
     </script>
 </head>
@@ -49,22 +48,16 @@
         <h1 class="text-2xl font-bold mb-6">ประวัติการนัดหมาย</h1>
         <div class="mb-6">
             <input id="userlineid" type="text" class="border p-2 rounded-md w-full" placeholder="กรอก User Line ID เพื่อกรองนัดหมาย">
-            <button onclick="applyFilter()" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">กรอง</button>
+            <button onclick="applyFilter(document.getElementById('userlineid').value)" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">กรอง</button>
         </div>
         <div id="historyTable" class="space-y-4">
             <!-- การนัดหมายจะถูกแสดงที่นี่ -->
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Apply initial filter when content is loaded.
-            searchData();
-        });
-
         async function fetchHistory(userlineid = '') {
             try {
                 if (!userlineid) {
-                    // If userlineid is empty, clear the display.
                     displayHistory([]);
                     return;
                 }
@@ -91,7 +84,7 @@
             bookings.forEach((booking, index) => {
                 const bookingDiv = document.createElement('div');
                 bookingDiv.classList.add('bg-gray-200', 'p-4', 'rounded-md', 'space-y-2');
-                
+
                 let cancelButtonHtml = '';
                 if (booking.status !== 'ยกเลิก') {
                     cancelButtonHtml = `<button class="px-4 py-2 bg-red-500 text-white rounded-md" onclick="cancelBooking(${index})">ยกเลิกนัดหมาย</button>`;
@@ -105,13 +98,9 @@
                     <p><strong>สถานะ:</strong> ${booking.status}</p>
                     ${cancelButtonHtml}
                 `;
-                
+
                 historyTable.appendChild(bookingDiv);
             });
-        }
-
-        function applyFilter(userlineid) {
-            fetchHistory(userlineid);
         }
 
         async function cancelBooking(index) {
@@ -130,9 +119,9 @@
                         method: 'POST'
                     });
                     if (!response.ok) throw new Error('Network response was not ok');
-                    
+
                     Swal.fire('สำเร็จ!', 'นัดหมายถูกยกเลิก', 'success');
-                    searchData(); // Refresh the filtered results after cancellation.
+                    applyFilter(document.getElementById('userlineid').value); // Refresh the filtered results after cancellation.
                 }
             } catch (error) {
                 console.error('There was a problem with the fetch operation:', error);
