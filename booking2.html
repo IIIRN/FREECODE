@@ -68,7 +68,7 @@
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
         window.onload = function () {
-            initializeLiff(), getUserProfile();
+            initializeLiff(),getUserProfile();
         };
         async function initializeLiff() {
             await liff.init({ liffId: '2005629952-bng0VRoM' }); // Replace with your LIFF ID
@@ -236,7 +236,7 @@
 
         function populateYearSelect(currentYear) {
             yearSelect.innerHTML = '';
-            for (let i = currentYear; i <= currentYear + 3; i++) {
+            for (let i = currentYear; i <= currentYear + 10; i++) {
                 const option = document.createElement('option');
                 option.value = i;
                 option.textContent = i;
@@ -381,9 +381,7 @@
                 });
                 const result = await response.text();
                 showPopup('สำเร็จ!', 'การนัดหมายเสร็จสมบูรณ์', 'success');
-                setTimeout(() => {
-                    liff.closeWindow();
-                }, 2000); // Close LIFF window after 2 seconds
+                updateCalendar(new Date(yearSelect.value, monthSelect.value));
             } catch (error) {
                 console.error('There was a problem with the fetch operation:', error);
                 showPopup('เกิดข้อผิดพลาด', 'ไม่สามารถส่งข้อมูลได้ โปรดลองใหม่อีกครั้ง', 'error');
@@ -400,14 +398,12 @@
                 return;
             }
             showPopup('ยืนยันการนัดหมาย', `
-                <div class="px-6 py-4 text-left text-sm">
                 <p>บริการ: ${form.service.value}</p>
                 <p>บุคลากร: ${form.personnel.value}</p>
                 <p>ชื่อ: ${form.name.value}</p>
                 <p>เบอร์ติดต่อ: ${form.phonenumber.value}</p>
                 <p>วันที่: ${selectedDate}</p>
                 <p>เวลา: ${timeInput.value}</p>
-                </div>
             `, 'confirm');
         });
     </script>
