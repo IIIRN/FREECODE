@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,37 +22,279 @@
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+        /* Fullscreen loader */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+        .loading-overlay.active {
+            display: flex;
+        }
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
-     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-     <script>
-         window.onload = function () {
-            initializeLiff(),getUserProfile();
-         };
-         async function initializeLiff() {
-             await liff.init({ liffId: '2005629952-bng0VRoM' }); // Replace with your LIFF ID
-             if (liff.isLoggedIn()) {
-                 getUserProfile();
-             } else {
-                 liff.login();
-             }
-         }
-         async function getUserProfile() {
-             try {
-                 const profile = await liff.getProfile();
-                 document.getElementById('userlineid').value = profile.userId;
-                 document.getElementById('displayName').value = profile.displayName;
-                 // Trigger search when user ID is retrieved
-                 searchData();
-             } catch (error) {
-                 console.error('Error getting profile data:', error);
-             }
-         }
-     </script>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+        window.onload = function () {
+            initializeLiff();
+        };
+
+        async function initializeLiff() {
+            await liff.init({ liffId: '2005629952-bng0VRoM' }); // Replace with your LIFF ID
+            if (liff.isLoggedIn()) {
+                getUserProfile();
+            } else {
+                liff.login();
+            }
+        }
+
+        async function getUserProfile() {
+            try {
+                const profile = await liff.getProfile();
+                document.getElementById('userlineid').value = profile.userId;
+                document.getElementById('displayName').value = profile.displayName;
+                loadPageData(); // Trigger data loading here
+            } catch (error) {
+                console.error('Error getting profile data:', error);
+            }
+        }
+
+        async function loadPageData() {
+            showLoading();
+            const currentDate = new Date();
+            try {
+                await Promise.all([
+                    fetchDropdownData(),
+                    updateCalendar(currentDate)
+                ]);
+            } catch (error) {
+                console.error('Error loading data:', error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function fetchDropdownData() {
+            try {
+                const response = await fetch('https://script.google.com/macros/s/AKfycbxC6ZA7AI9u6gycKkJ54PBv5aqLGihvioSeM1yKkw2Bair_LqGMLNbpAQIfn_CmahvF/exec?action=fetchServicesAndPersonnel');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                populateDropdown('service', data.services);
+                populateDropdown('personnel', data.personnel);
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+            }
+        }
+
+        function populateDropdown(dropdownId, items) {
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.innerHTML = '';
+            items.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item;
+                option.textContent = item;
+                dropdown.appendChild(option);
+            });
+        }
+
+        async function updateCalendar(date) {
+            const month = date.getMonth();
+            const year = date.getFullYear();
+            populateYearSelect(year);
+            monthSelect.value = month;
+            yearSelect.value = year;
+            populateDays(month, year, date.getDate());
+        }
+
+        function populateYearSelect(currentYear) {
+            yearSelect.innerHTML = '';
+            for (let i = currentYear; i <= currentYear + 10; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                yearSelect.appendChild(option);
+            }
+        }
+
+        function populateDays(month, year, currentDay) {
+            calendarDays.innerHTML = '';
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('bg-white', 'px-6', 'py-3', 'mx-2', 'bg-gray-100', 'border', 'border-gray-300', 'text-center', 'rounded-md', 'cursor-pointer');
+                dayElement.textContent = `${daysOfWeek[date.getDay()]} ${day}`;
+                if (day === currentDay) {
+                    dayElement.id = 'currentDay';
+                    dayElement.classList.add('selected');
+                    selectDate(year, month, day);
+                }
+                dayElement.addEventListener('click', () => {
+                    document.querySelectorAll('#calendarDays > div').forEach(el => el.classList.remove('selected'));
+                    dayElement.classList.add('selected');
+                    selectDate(year, month, day);
+                });
+                calendarDays.appendChild(dayElement);
+            }
+            scrollToCurrentDay();
+        }
+
+        function scrollToCurrentDay() {
+            setTimeout(() => {
+                const currentDayElement = document.getElementById('currentDay');
+                if (currentDayElement) {
+                    currentDayElement.scrollIntoView({ behavior: 'fast', block: 'nearest', inline: 'center' });
+                }
+            }, 100);
+        }
+
+        async function selectDate(year, month, day) {
+            selectedDate = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+            try {
+                Swal.fire({
+                    title: '<div class="py-10 text-sm">อัพเดทข้อมูลปัจจุบัน กรุณารอสักครู่</div>',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                const response = await fetch(`https://script.google.com/macros/s/AKfycbxC6ZA7AI9u6gycKkJ54PBv5aqLGihvioSeM1yKkw2Bair_LqGMLNbpAQIfn_CmahvF/exec?date=${selectedDate}&timezone=GMT+7`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const availability = await response.json();
+                updateAvailability(availability);
+                Swal.close();
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+                Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถโหลดข้อมูลได้ โปรดลองใหม่อีกครั้ง', 'error');
+            }
+        }
+
+        function updateAvailability(availability) {
+            availabilityDiv.innerHTML = '';
+            for (const [time, status] of Object.entries(availability)) {
+                const slotDiv = document.createElement('div');
+                slotDiv.className = 'flex justify-between items-center py-2';
+
+                const timeSpan = document.createElement('span');
+                timeSpan.className = 'px-6 py-2 rounded-md bg-gray-100 text-black';
+                timeSpan.textContent = `${time} น.`;
+
+                const statusButton = document.createElement('button');
+                statusButton.className = `px-6 py-2 rounded-md ${status === 'Available' ? 'bg-green-200 text-green-600 cursor-not-allowed' : 'bg-red-200 text-red-600 cursor-not-allowed'}`;
+                statusButton.textContent = status === 'Available' ? 'ว่าง' : 'เต็ม';
+                statusButton.disabled = true;
+
+                const bookButton = document.createElement('button');
+                bookButton.className = `custom-button px-4 py-2 rounded-md ${status === 'Available' ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-400'}`;
+                bookButton.innerHTML = `<i class="fas fa-calendar-alt"></i> นัดหมาย`;
+                bookButton.disabled = status !== 'Available';
+                bookButton.addEventListener('click', () => {
+                    timeInput.value = time.padStart(5, '0');
+                    showPopup();
+                });
+
+                slotDiv.appendChild(timeSpan);
+                slotDiv.appendChild(statusButton);
+                slotDiv.appendChild(bookButton);
+                availabilityDiv.appendChild(slotDiv);
+            }
+        }
+
+        function showPopup() {
+            Swal.fire({
+                title: 'ยืนยันการนัดหมาย',
+                html: `<div class="text-left">
+                    <p>บริการ: ${form.service.value}</p>
+                    <p>บุคลากร: ${form.personnel.value}</p>
+                    <p>ชื่อ: ${form.name.value}</p>
+                    <p>เบอร์ติดต่อ: ${form.phonenumber.value}</p>
+                    <p>วันที่: ${selectedDate}</p>
+                    <p>เวลา: ${timeInput.value}</p>
+                </div>`,
+                showCancelButton: true,
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    submitBooking();
+                }
+            });
+        }
+
+        async function submitBooking() {
+            try {
+                Swal.fire({
+                    title: 'กำลังส่งข้อมูลนัดหมาย...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                const formData = new FormData(form);
+                formData.append('date', selectedDate);
+                const response = await fetch('https://script.google.com/macros/s/AKfycbxC6ZA7AI9u6gycKkJ54PBv5aqLGihvioSeM1yKkw2Bair_LqGMLNbpAQIfn_CmahvF/exec', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.text();
+                Swal.close();
+                Swal.fire('สำเร็จ!', 'การนัดหมายเสร็จสมบูรณ์', 'success').then(() => {
+                    selectDate(new Date(yearSelect.value, monthSelect.value).getFullYear(), new Date(yearSelect.value, monthSelect.value).getMonth(), new Date().getDate());
+                });
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+                Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถส่งข้อมูลได้ โปรดลองใหม่อีกครั้ง', 'error');
+            }
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!selectedDate) {
+                Swal.fire('กรุณาเลือกวันที่');
+                return;
+            }
+            showPopup();
+        });
+
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
+    </script>
 </head>
 <body class="m-5">
-    <div class="max-w-lg mx-auto py-4 px-6 mb-4 ">
-            <img class="img w-48 mx-auto " src="https://lh5.googleusercontent.com/d/1J91OGbPsqY9H44bbHOFEspiUqqtfBTQW" alt="">        
-            <form id="bookingForm" class="space-y-4 pt-2" novalidate>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
+    </div>
+    <div class="max-w-lg mx-auto py-4 px-6 mb-4">
+        <img class="img w-48 mx-auto" src="https://lh5.googleusercontent.com/d/1J91OGbPsqY9H44bbHOFEspiUqqtfBTQW" alt="">
+        <form id="bookingForm" class="space-y-4 pt-2" novalidate>
             <input type="hidden" name="action" value="makeBooking">
             <div id="step1" class="grid gap-4 max-w-sm mx-auto">
                 <div>
@@ -83,7 +324,7 @@
                     <label for="note" class="block w-48 text-center text-sm bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">รายละเอียดเพิ่มเติม</label>
                     <input type="textarea" id="note" name="note" required class="w-full h-24 px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
-                <div id="buttons" class="flex justify-end  mt-8">
+                <div id="buttons" class="flex justify-end mt-8">
                     <button type="button" onclick="nextStep()" class="px-8 py-2 bg-blue-700 text-white rounded-md">ถัดไป</button>
                 </div>
             </div>
@@ -127,227 +368,6 @@
                 </div>
             </div>
         </form>
-       
-       
     </div>
-    <script>
-        let currentStep = 1;
-        function nextStep() {
-            if (currentStep < 2) {
-                document.getElementById(`step${currentStep}`).style.display = 'none';
-                currentStep++;
-                document.getElementById(`step${currentStep}`).style.display = 'block';
-                if (currentStep === 2) {
-                    scrollToCurrentDay();
-                }
-            }
-        }
-
-        function prevStep() {
-            if (currentStep > 1) {
-                document.getElementById(`step${currentStep}`).style.display = 'none';
-                currentStep--;
-                document.getElementById(`step${currentStep}`).style.display = 'grid';
-                if (currentStep === 2) {
-                    scrollToCurrentDay();
-                }
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            await fetchDropdownData();
-            const currentDate = new Date();
-            populateYearSelect(currentDate.getFullYear());
-            monthSelect.value = currentDate.getMonth();
-            yearSelect.value = currentDate.getFullYear();
-            updateCalendar(currentDate);
-            scrollToCurrentDay();
-        });
-
-        async function fetchDropdownData() {
-            try {
-                const response = await fetch('https://script.google.com/macros/s/AKfycbxC6ZA7AI9u6gycKkJ54PBv5aqLGihvioSeM1yKkw2Bair_LqGMLNbpAQIfn_CmahvF/exec?action=fetchServicesAndPersonnel');
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                    populateDropdown('service', data.services);
-                    populateDropdown('personnel', data.personnel);
-            } catch (error) {
-                console.error('There was a problem with the fetch operation:', error);
-            }
-        }
-
-        function populateDropdown(dropdownId, items) {
-            const dropdown = document.getElementById(dropdownId);
-            dropdown.innerHTML = '';
-            items.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item;
-                option.textContent = item;
-                dropdown.appendChild(option);
-            });
-        }
-        const form = document.getElementById('bookingForm');
-        const monthSelect = document.getElementById('monthSelect');
-        const yearSelect = document.getElementById('yearSelect');
-        const calendarDays = document.getElementById('calendarDays');
-        const availabilityDiv = document.getElementById('availability');
-        const timeInput = document.getElementById('time');
-        let selectedDate = '';
-
-        monthSelect.addEventListener('change', () => updateCalendar(new Date(yearSelect.value, monthSelect.value)));
-        yearSelect.addEventListener('change', () => updateCalendar(new Date(yearSelect.value, monthSelect.value)));
-
-        const daysOfWeek = ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'];
-
-        function populateYearSelect(currentYear) {
-            for (let i = currentYear; i <= currentYear + 10; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = i;
-                yearSelect.appendChild(option);
-            }
-        }
-        function updateCalendar(date) {
-            const month = date.getMonth();
-            const year = date.getFullYear();
-            populateDays(month, year, date.getDate());
-        }
-        function populateDays(month, year, currentDay) {
-            calendarDays.innerHTML = '';
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            for (let day = 1; day <= daysInMonth; day++) {
-                const date = new Date(year, month, day);
-                const dayElement = document.createElement('div');
-                dayElement.classList.add('bg-white', 'px-6', 'py-3', 'mx-2', 'bg-gray-100','border','border-gray-300', 'text-center', 'rounded-md', 'cursor-pointer');
-                dayElement.textContent = `${daysOfWeek[date.getDay()]} ${day}`;
-                if (day === currentDay) {
-                    dayElement.id = 'currentDay';
-                    dayElement.classList.add('selected');
-                    selectDate(year, month, day);
-                }
-                dayElement.addEventListener('click', () => {
-                    document.querySelectorAll('#calendarDays > div').forEach(el => el.classList.remove('selected'));
-                    dayElement.classList.add('selected');
-                    selectDate(year, month, day);
-                });
-                calendarDays.appendChild(dayElement);
-            }
-            scrollToCurrentDay();
-        }
-        function scrollToCurrentDay() {
-            setTimeout(() => {
-                const currentDayElement = document.getElementById('currentDay');
-                if (currentDayElement) {
-                    currentDayElement.scrollIntoView({ behavior: 'fast', block: 'nearest', inline: 'center' });
-                }
-            }, 100);
-        }
-        async function selectDate(year, month, day) {
-            selectedDate = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-            try {
-                Swal.fire({
-                    title: '<div class="py-10 text-sm">อัพเดทข้อมูลปัจจุบัน กรุณารอสักครู่</div>',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-                const response = await fetch(`https://script.google.com/macros/s/AKfycbxC6ZA7AI9u6gycKkJ54PBv5aqLGihvioSeM1yKkw2Bair_LqGMLNbpAQIfn_CmahvF/exec?date=${selectedDate}&timezone=GMT+7`);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const availability = await response.json();
-                updateAvailability(availability);
-                Swal.close();
-            } catch (error) {
-                console.error('There was a problem with the fetch operation:', error);
-                Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถโหลดข้อมูลได้ โปรดลองใหม่อีกครั้ง', 'error');
-            }
-        }
-        function updateAvailability(availability) {
-            availabilityDiv.innerHTML = '';
-            for (const [time, status] of Object.entries(availability)) {
-                const slotDiv = document.createElement('div');
-                slotDiv.className = 'flex justify-between items-center py-2';
-
-                const timeSpan = document.createElement('span');
-                timeSpan.className = `px-6 py-2 rounded-md bg-gray-100 text-black`;
-                timeSpan.textContent = `${time} น.`;
-
-                const statusButton = document.createElement('button');
-                statusButton.className = `px-6 py-2 rounded-md ${status === 'Available' ? 'bg-green-200 text-green-600 cursor-not-allowed' : 'bg-red-200 text-red-600 cursor-not-allowed'}`;
-                statusButton.textContent = status === 'Available' ? 'ว่าง' : 'เต็ม';
-                statusButton.disabled = true;
-
-                const bookButton = document.createElement('button');
-                bookButton.className = `custom-button px-4 py-2 rounded-md ${status === 'Available' ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-400'}`;
-                bookButton.innerHTML = `<i class="fas fa-calendar-alt"></i> นัดหมาย`;
-                bookButton.disabled = status !== 'Available';
-                bookButton.addEventListener('click', () => {
-                    timeInput.value = time.padStart(5, '0');
-                    showPopup();
-                });
-
-                slotDiv.appendChild(timeSpan);
-                slotDiv.appendChild(statusButton);
-                slotDiv.appendChild(bookButton);
-                availabilityDiv.appendChild(slotDiv);
-            }
-        }
-        function showPopup() {
-            Swal.fire({
-                title: 'ยืนยันการนัดหมาย',
-                html: `<div class="text-left">
-                       <p>บริการ: ${form.service.value}</p>
-                       <p>บุคลากร: ${form.personnel.value}</p>
-                       <p>ชื่อ: ${form.name.value}</p>
-                       <p>เบอร์ติดต่อ: ${form.phonenumber.value}</p>
-                       <p>วันที่: ${selectedDate}</p>
-                       <p>เวลา: ${timeInput.value}</p>`,
-                showCancelButton: true,
-                confirmButtonText: 'ยืนยัน',
-                cancelButtonText: 'ยกเลิก'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    submitBooking();
-                }
-            });
-        }
-        async function submitBooking() {
-            try {
-                Swal.fire({
-                    title: 'กำลังส่งข้อมูลนัดหมาย...',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-                const formData = new FormData(form);
-                formData.append('date', selectedDate);
-                const response = await fetch('https://script.google.com/macros/s/AKfycbxC6ZA7AI9u6gycKkJ54PBv5aqLGihvioSeM1yKkw2Bair_LqGMLNbpAQIfn_CmahvF/exec', {
-                    method: 'POST',
-                    body: formData
-                });
-                const result = await response.text();
-                Swal.close();
-                Swal.fire('สำเร็จ!', 'การนัดหมายเสร็จสมบูรณ์', 'success').then(() => {
-                    selectDate(new Date(yearSelect.value, monthSelect.value).getFullYear(), new Date(yearSelect.value, monthSelect.value).getMonth(), new Date().getDate());
-                });
-            } catch (error) {
-                console.error('There was a problem with the fetch operation:', error);
-                Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถส่งข้อมูลได้ โปรดลองใหม่อีกครั้ง', 'error');
-            }
-        }
-                form.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    if (!selectedDate) {
-                        Swal.fire('กรุณาเลือกวันที่');
-                        return;
-                    }
-                    showPopup();
-                });
-    </script>
 </body>
 </html>
