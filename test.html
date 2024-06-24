@@ -165,7 +165,7 @@
 
         async function fetchDropdownData() {
             try {
-                const response = await fetch('https://script.google.com/macros/s/AKfycbyKdYy6zB1Nlgp4QKrBQgCjsiQS0hhZYqxJ7aASYrJHtocEpB0ENTmlPbM2uldLbiI_/exec?action=fetchServicesAndPersonnel');
+                const response = await fetch('https://script.google.com/macros/s/AKfycbzg51AN7wJJse4AD-mAjki2kBxFFrr4CMr9MQc_5lUDdUX9uuI3nChuN6Qu9ZULrq96/exec?action=fetchServicesAndPersonnel');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -258,7 +258,7 @@
                         Swal.showLoading();
                     }
                 });
-                const response = await fetch(`https://script.google.com/macros/s/AKfycbyKdYy6zB1Nlgp4QKrBQgCjsiQS0hhZYqxJ7aASYrJHtocEpB0ENTmlPbM2uldLbiI_/exec?date=${selectedDate}&timezone=GMT+7`);
+                const response = await fetch(`https://script.google.com/macros/s/AKfycbzg51AN7wJJse4AD-mAjki2kBxFFrr4CMr9MQc_5lUDdUX9uuI3nChuN6Qu9ZULrq96/exec?date=${selectedDate}&timezone=GMT+7`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -333,7 +333,7 @@
                 });
                 const formData = new FormData(form);
                 formData.append('date', selectedDate);
-                const response = await fetch('https://script.google.com/macros/s/AKfycbyKdYy6zB1Nlgp4QKrBQgCjsiQS0hhZYqxJ7aASYrJHtocEpB0ENTmlPbM2uldLbiI_/exec', {
+                const response = await fetch('https://script.google.com/macros/s/AKfycbzg51AN7wJJse4AD-mAjki2kBxFFrr4CMr9MQc_5lUDdUX9uuI3nChuN6Qu9ZULrq96/exec', {
                     method: 'POST',
                     body: formData
                 });
