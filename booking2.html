@@ -60,9 +60,10 @@
         }
         .popup-content {
             background: white;
-            padding: 20px;
+            padding: 40px;
             border-radius: 8px;
             text-align: center;
+            width: 80%;
         }
     </style>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
@@ -236,7 +237,7 @@
 
         function populateYearSelect(currentYear) {
             yearSelect.innerHTML = '';
-            for (let i = currentYear; i <= currentYear + 3; i++) {
+            for (let i = currentYear; i <= currentYear + 10; i++) {
                 const option = document.createElement('option');
                 option.value = i;
                 option.textContent = i;
@@ -349,10 +350,10 @@
         function showPopup(title, content, type) {
             const popup = document.getElementById('popup');
             const popupContent = document.getElementById('popupContent');
-            popupContent.innerHTML = `<h2 class="text-xl mb-4">${title}</h2><div>${content}</div>`;
+            popupContent.innerHTML = `<h2 class="text-md text-left">${title}</h2><div>${content}</div>`;
             if (type === 'confirm') {
                 popupContent.innerHTML += `
-                    <div class="mt-4">
+                    <div class="mt-4 flex justify-between px-6">
                         <button id="confirmButton" class="px-4 py-2 bg-blue-700 text-white rounded-md mr-2">ยืนยัน</button>
                         <button id="cancelButton" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md">ยกเลิก</button>
                     </div>
@@ -400,7 +401,7 @@
                 return;
             }
             showPopup('ยืนยันการนัดหมาย', `
-                <div class="px-6 py-4 text-left text-sm">
+                <div class="max-w-sm px-6 py-4 text-left text-sm">
                 <p>บริการ: ${form.service.value}</p>
                 <p>บุคลากร: ${form.personnel.value}</p>
                 <p>ชื่อ: ${form.name.value}</p>
