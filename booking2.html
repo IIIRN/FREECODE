@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,7 +26,7 @@
      <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
      <script>
          window.onload = function () {
-             initializeLiff(),getUserProfile();
+            //  initializeLiff(),getUserProfile();
          };
          async function initializeLiff() {
              await liff.init({ liffId: '2005629952-bng0VRoM' }); // Replace with your LIFF ID
@@ -57,27 +56,27 @@
             <input type="hidden" name="action" value="makeBooking">
             <div id="step1" class="grid gap-4 max-w-sm mx-auto">
                 <div>
-                    <input type="text" id="userlineid" name="userlineid" required class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 hidden">
+                    <input type="text" id="userlineid" name="userlineid" class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 hidden">
                 </div>
                 <div>
                     <label for="service" class="block w-16 text-center text-sm bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">บริการ</label>
-                    <select id="service" name="service" required class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="service" name="service" class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <!-- Options will be populated by JavaScript -->
                     </select>
                 </div>
                 <div>
                     <label for="personnel" class="block w-16 text-center text-sm bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">สาขา</label>
-                    <select id="personnel" name="personnel" required class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="personnel" name="personnel" class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <!-- Options will be populated by JavaScript -->
                     </select>
                 </div>
                 <div>
                     <label for="name" class="block w-16 text-center text-sm bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">ชื่อ</label>
-                    <input type="text" id="name" name="name" required class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" id="name" name="name" class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
                     <label for="phonenumber" class="block w-24 text-center text-sm bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">เบอร์ติดต่อ</label>
-                    <input type="text" id="phonenumber" name="phonenumber" required class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" id="phonenumber" name="phonenumber" class="w-full px-3 py-2 border border-blue-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <div>
                     <label for="note" class="block w-48 text-center text-sm bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">รายละเอียดเพิ่มเติม</label>
@@ -134,9 +133,9 @@
         let currentStep = 1;
         function nextStep() {
             if (currentStep < 2) {
-                document.getElementById(`step${currentStep}`).style.display = 'none';
+                document.getElementById(step${currentStep}).style.display = 'none';
                 currentStep++;
-                document.getElementById(`step${currentStep}`).style.display = 'block';
+                document.getElementById(step${currentStep}).style.display = 'block';
                 if (currentStep === 2) {
                     scrollToCurrentDay();
                 }
@@ -145,9 +144,9 @@
 
         function prevStep() {
             if (currentStep > 1) {
-                document.getElementById(`step${currentStep}`).style.display = 'none';
+                document.getElementById(step${currentStep}).style.display = 'none';
                 currentStep--;
-                document.getElementById(`step${currentStep}`).style.display = 'block';
+                document.getElementById(step${currentStep}).style.display = 'grid';
                 if (currentStep === 2) {
                     scrollToCurrentDay();
                 }
@@ -171,8 +170,8 @@
                     throw new Error('Network response was not ok');
                 }
                 const data = await response.json();
-                populateDropdown('service', data.services);
-                populateDropdown('personnel', data.personnel);
+                    populateDropdown('service', data.services);
+                    populateDropdown('personnel', data.personnel);
             } catch (error) {
                 console.error('There was a problem with the fetch operation:', error);
             }
@@ -188,7 +187,6 @@
                 dropdown.appendChild(option);
             });
         }
-
         const form = document.getElementById('bookingForm');
         const monthSelect = document.getElementById('monthSelect');
         const yearSelect = document.getElementById('yearSelect');
@@ -210,13 +208,11 @@
                 yearSelect.appendChild(option);
             }
         }
-
         function updateCalendar(date) {
             const month = date.getMonth();
             const year = date.getFullYear();
             populateDays(month, year, date.getDate());
         }
-
         function populateDays(month, year, currentDay) {
             calendarDays.innerHTML = '';
             const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -224,7 +220,7 @@
                 const date = new Date(year, month, day);
                 const dayElement = document.createElement('div');
                 dayElement.classList.add('bg-white', 'px-6', 'py-3', 'mx-2', 'bg-gray-100','border','border-gray-300', 'text-center', 'rounded-md', 'cursor-pointer');
-                dayElement.textContent = `${daysOfWeek[date.getDay()]} ${day}`;
+                dayElement.textContent = ${daysOfWeek[date.getDay()]} ${day};
                 if (day === currentDay) {
                     dayElement.id = 'currentDay';
                     dayElement.classList.add('selected');
@@ -239,27 +235,25 @@
             }
             scrollToCurrentDay();
         }
-
         function scrollToCurrentDay() {
             setTimeout(() => {
                 const currentDayElement = document.getElementById('currentDay');
                 if (currentDayElement) {
-                    currentDayElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    currentDayElement.scrollIntoView({ behavior: 'fast', block: 'nearest', inline: 'center' });
                 }
             }, 100);
         }
-
         async function selectDate(year, month, day) {
-            selectedDate = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+            selectedDate = ${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')};
             try {
                 Swal.fire({
-                    title: '<div class="py-10 text-sm">⏱️ อัพเดทข้อมูลปัจจุบัน กรุณารอสักครู่ ...🛵..</div>',
+                    title: '<div class="py-10 text-sm">อัพเดทข้อมูลปัจจุบัน กรุณารอสักครู่</div>',
                     allowOutsideClick: false,
                     didOpen: () => {
                         Swal.showLoading();
                     }
                 });
-                const response = await fetch(`https://script.google.com/macros/s/AKfycbxC6ZA7AI9u6gycKkJ54PBv5aqLGihvioSeM1yKkw2Bair_LqGMLNbpAQIfn_CmahvF/exec?date=${selectedDate}&timezone=GMT+7`);
+                const response = await fetch(https://script.google.com/macros/s/AKfycbxC6ZA7AI9u6gycKkJ54PBv5aqLGihvioSeM1yKkw2Bair_LqGMLNbpAQIfn_CmahvF/exec?date=${selectedDate}&timezone=GMT+7);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -271,7 +265,6 @@
                 Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถโหลดข้อมูลได้ โปรดลองใหม่อีกครั้ง', 'error');
             }
         }
-
         function updateAvailability(availability) {
             availabilityDiv.innerHTML = '';
             for (const [time, status] of Object.entries(availability)) {
@@ -279,17 +272,17 @@
                 slotDiv.className = 'flex justify-between items-center py-2';
 
                 const timeSpan = document.createElement('span');
-                timeSpan.className = `px-6 py-2 rounded-md bg-gray-100 text-black`;
-                timeSpan.textContent = `${time} น.`;
+                timeSpan.className = px-6 py-2 rounded-md bg-gray-100 text-black;
+                timeSpan.textContent = ${time} น.;
 
                 const statusButton = document.createElement('button');
-                statusButton.className = `px-6 py-2 rounded-md ${status === 'Available' ? 'bg-green-200 text-green-600 cursor-not-allowed' : 'bg-red-200 text-red-600 cursor-not-allowed'}`;
+                statusButton.className = px-6 py-2 rounded-md ${status === 'Available' ? 'bg-green-200 text-green-600 cursor-not-allowed' : 'bg-red-200 text-red-600 cursor-not-allowed'};
                 statusButton.textContent = status === 'Available' ? 'ว่าง' : 'เต็ม';
                 statusButton.disabled = true;
 
                 const bookButton = document.createElement('button');
-                bookButton.className = `custom-button px-4 py-2 rounded-md ${status === 'Available' ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-400'}`;
-                bookButton.innerHTML = `<i class="fas fa-calendar-alt"></i> นัดหมาย`;
+                bookButton.className = custom-button px-4 py-2 rounded-md ${status === 'Available' ? 'bg-blue-700 text-white' : 'bg-gray-100 text-gray-400'};
+                bookButton.innerHTML = <i class="fas fa-calendar-alt"></i> นัดหมาย;
                 bookButton.disabled = status !== 'Available';
                 bookButton.addEventListener('click', () => {
                     timeInput.value = time.padStart(5, '0');
@@ -302,17 +295,16 @@
                 availabilityDiv.appendChild(slotDiv);
             }
         }
-
         function showPopup() {
             Swal.fire({
                 title: 'ยืนยันการนัดหมาย',
-                html: `<div class="text-left">
+                html: <div class="text-left">
                        <p>บริการ: ${form.service.value}</p>
                        <p>บุคลากร: ${form.personnel.value}</p>
                        <p>ชื่อ: ${form.name.value}</p>
                        <p>เบอร์ติดต่อ: ${form.phonenumber.value}</p>
                        <p>วันที่: ${selectedDate}</p>
-                       <p>เวลา: ${timeInput.value}</p>`,
+                       <p>เวลา: ${timeInput.value}</p>,
                 showCancelButton: true,
                 confirmButtonText: 'ยืนยัน',
                 cancelButtonText: 'ยกเลิก'
@@ -322,7 +314,6 @@
                 }
             });
         }
-
         async function submitBooking() {
             try {
                 Swal.fire({
@@ -348,15 +339,14 @@
                 Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถส่งข้อมูลได้ โปรดลองใหม่อีกครั้ง', 'error');
             }
         }
-
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (!selectedDate) {
-                Swal.fire('กรุณาเลือกวันที่');
-                return;
-            }
-            showPopup();
-        });
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    if (!selectedDate) {
+                        Swal.fire('กรุณาเลือกวันที่');
+                        return;
+                    }
+                    showPopup();
+                });
     </script>
 </body>
 </html>
