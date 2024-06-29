@@ -89,29 +89,26 @@
     </style>
 </head>
 <body>
-    <div class="container buttom-content">
-        <div id="step1">
-            <div class="state p-2" style="position: relative;">
+           <div class="max-w-sm mx-auto px-4 py-4 mt-10 shadow-lg border rounded">
+            <div class="p-4">
                 <div id="loadingOverlay">
                     <div>Loading...</div>
                 </div>
-                <div class="input-icons">
-                    <span class="material-symbols-outlined"> co_present </span>
-                    <input type="text" class="input-field" id="nameIDdata" placeholder="ชื่อ - สกุล" name="nameIDdata" required>
+                <div class="mx-auto w-32 h-32 mb-2 border rounded-full relative bg-gray-100 mb-4 shadow-inset">
+                    <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Default Image" id="picIDdata" class="object-cover w-full h-32 rounded-full">
                 </div>
-                <div class="input-icons">
-                    <span class="material-symbols-outlined">pin</span>
-                    <input type="text" class="input-field" id="roleIDdata" placeholder="รหัส พนักงาน" name="roleIDdata" required>
+                <div class="my-2">
+                    <input type="text" class="bg-gray-100 w-full px-4 py-3 rounded-lg shadow-sm" id="nameIDdata" placeholder="ชื่อ - สกุล" name="nameIDdata" required>
                 </div>
-                <div class="input-icons">
-                    <span class="material-symbols-outlined"> editor_choice </span>
-                    <input type="text" class="input-field" id="positionIDdata" placeholder="ตำแหน่ง" name="positionIDdata" required>
+                <div class="my-2">
+                    <input type="text" class="bg-gray-100 w-full px-4 py-3 rounded-lg shadow-sm" id="roleIDdata" placeholder="รหัส พนักงาน" name="roleIDdata" required>
+                </div>
+                <div class="my-2">
+                    <input type="text" class="bg-gray-100 w-full px-4 py-3 rounded-lg shadow-sm" id="positionIDdata" placeholder="ตำแหน่ง" name="positionIDdata" required>
                 </div>
                 <input type="text" id="userId" name="userId" style="visibility: hidden;" />
                 <input type="text" id="userIDdata" name="userIDdata" style="display: none;"/>
-                <input type="text" id="picIDdata" name="picIDdata" style="display: none;"/>
             </div>
         </div>
-    </div>
 </body>
 </html>
