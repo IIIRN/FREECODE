@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ลงทะเบียน</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body style="font-family: Noto Sans Thai;" class="bg-gray-100">
+<div class="h-screen">
+    <div class="max-w-3xl mx-auto px-4 py-4">
+        <form>
+            <div class="bg-white relative p-10 shadow rounded-lg w-6/6 md:w-5/6 lg:w-4/6 xl:w-3/6 mx-auto">    
+                <div class="mb-5 text-center">
+                    <div class="mx-auto w-32 h-32 mb-2 border rounded-full relative bg-gray-100 mb-4 shadow-inset">
+                        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Default Image" id="preview" class="object-cover w-full h-32 rounded-full">
+                    </div>
+                    <label for="file" class="cursor-pointer inline-flex justify-between items-center focus:outline-none border py-2 px-4 rounded-lg shadow-sm text-left text-gray-600 bg-white hover:bg-gray-100 font-medium">
+                        อัพโหลดรูป
+                        <input type="file" id="file" name="file" accept="image/*" class="hidden">
+                    </label>
+                    <div class="mx-auto w-48 text-gray-500 text-xs text-center mt-1">คลิกเพื่ออัพโหลดรูปของคุณ</div>
+                </div>
+                <div class="mb-5">
+                    <div class="relative">
+                        <input type="text" id="userlineId" name="userlineId" placeholder="Auto keyId" class="bg-gray-300 to-gray-100 w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium" readonly>
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <div class="relative">
+                        <input type="text" id="nameId" name="nameId" placeholder="ชื่อ-สกุล" class="bg-violet-600 w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium">
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <div class="relative">
+                        <input type="text" id="numberId" name="numberId" placeholder="เลขรหัสพนักงาน" class="bg-violet-600 w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium">
+                    </div>     
+                </div>
+                <div class="mb-5">
+                    <div class="relative">
+                        <input type="text" id="roleId" name="roleId" placeholder="ตำแหน่ง"class="bg-violet-600 w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium">
+                    </div>
+                </div>
+                <br /> 
+                <br />
+                <button type="button" id="submitBtn" class="bg-gradient-to-b from-gray-800 to-gray-900 text-center w-full text-white py-4 px-4 rounded hover:bg-blue-700">บันทึกข้อมูล</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+<script>
+window.onload = function () {
+    initializeLiff();
+};
+
+async function initializeLiff() {
+    await liff.init({ liffId: '2002824145-nP4yGraD' });
+
+    if (liff.isLoggedIn()) {
+        getUserProfile();
+    } else {
+        liff.login();
+    }
+}
+
+async function getUserProfile() {
+    try {
+        const profile = await liff.getProfile();
+        document.getElementById('userlineId').value = profile.userId;
+    } catch (error) {
+        console.error('Error getting profile data:', error);
+    }
+}
+
+async function sendFlexMessage() {
+    const flexMessage = {
+        type: 'flex',
+        altText: 'ลงทะเบียนเรียบร้อย',
+        contents: {
+            type: 'bubble',
+            body: {
+                type: 'box',
+                layout: 'vertical',
+                contents: [
+                    {
+                        type: 'text',
+                        text: 'ลงทะเบียนเรียบร้อย!',
+                        weight: 'bold',
+                        size: 'lg',
+                        wrap: true,
+                    },
+                ],
+            },
+        },
+    };
+
+    await liff.sendMessages([flexMessage]);
+}
+
+let url = "https://script.google.com/macros/s/AKfycbyW8kdPHaR2GFoBDqQNCcVy0M6bPqIqQuQUBmF3i2YPd3YAap9Yum74yIf-xe1-qxZ70Q/exec";
+let fileInput = document.getElementById("file");
+let imgPreview = document.getElementById("preview");
+let userlineIdInput = document.getElementById("userlineId");
+let nameIdInput = document.getElementById("nameId");
+let roleId = document.getElementById("roleId");
+let numberIdInput = document.getElementById("numberId");
+let submitBtn = document.getElementById("submitBtn");
+
+// Function to convert a file to base64
+function getBase64(file) {
+    return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+    });
+}
+
+// Function to preview the selected image
+function previewImage() {
+    // Check if a file is selected
+    if (fileInput.files.length > 0) {
+        let file = fileInput.files[0];
+        let reader = new FileReader();
+
+        reader.onload = function(e) {
+            imgPreview.src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+    } else {
+        imgPreview.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+    }
+}
+
+// Event listener for file input change
+fileInput.addEventListener('change', () => {
+    previewImage();
+});
+
+// Function to validate the required fields
+function validateForm() {
+    const userlineId = userlineIdInput.value.trim();
+    const nameId = nameIdInput.value.trim();
+    const roleIdValue = roleId.value.trim();
+
+    // Check if any of the required fields is empty
+    if (userlineId === '' || nameId === '' || roleIdValue === '') {
+        return false;
+    }
+
+    return true;
+}
+
+// Event listener for submit button click
+submitBtn.addEventListener('click', async (event) => {
+    event.preventDefault(); // Prevent default form submission behavior
+
+    // Validate the required fields before proceeding
+    if (!validateForm()) {
+        // Display an error message if validation fails
+        alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+        return;
+    }
+
+    // Display confirmation dialog
+    const isConfirmed = confirm('แน่ใจ ว่าคุณกำลังส่งข้อมูล?');
+
+    if (isConfirmed) {
+        // User confirmed, proceed with form submission
+
+        // Disable the submit button
+        submitBtn.disabled = true;
+
+        try {
+            let obj;
+
+            // Check if a file is selected
+            if (fileInput.files.length > 0) {
+                let file = fileInput.files[0];
+                let base64 = await getBase64(file);
+                imgPreview.src = `data:${file.type};base64,${base64}`;
+
+                obj = {
+                    base64: base64,
+                    type: file.type,
+                    name: file.name,
+                    userlineId: userlineIdInput.value,
+                    nameId: nameIdInput.value,
+                    roleId: roleId.value,
+                    numberId: numberIdInput.value
+                };
+            } else {
+                // Fetch the default image and convert it to base64
+                let response = await fetch("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
+                let blob = await response.blob();
+                let base64 = await getBase64(blob);
+                
+                obj = {
+                    base64: base64,
+                    type: "image/png", // Assuming a PNG default image
+                    name: "Avatar.png", // Name for default image
+                    userlineId: userlineIdInput.value,
+                    nameId: nameIdInput.value,
+                    roleId: roleId.value,
+                    numberId: numberIdInput.value
+                };
+            }
+
+            alert('กำลังบันทึก, รอสักครู่...');
+            let response = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify(obj)
+            });
+
+            let data = await response.text();
+            alert('บันทึกข้อมูลของคุณเรียบร้อย!');
+            sendFlexMessage();
+            console.log(data);
+            liff.closeWindow();
+            } catch (error) {
+                alert('เกิดข้อผิดพลาดขณะส่งข้อมูล');
+                console.error(error);
+            } finally {
+            // Enable the submit button after successful upload or error
+            submitBtn.disabled = false;
+        }
+    } else {
+        // User canceled the submission
+        alert('ยกเลิกการส่งข้อมูล');
+    }
+});
+</script>
+</body>
+</html>
